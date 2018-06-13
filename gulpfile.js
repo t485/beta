@@ -77,33 +77,35 @@ gulp.task("assets", function () {
         .pipe(gulp.dest("./docs/css/"));
     var favicons = gulp.src("./app/favicons/**/*")
         .pipe(gulp.dest("./docs/favicons/"));
+    var cname = gulp.src("./app/CNAME")
+        .pipe(gulp.dest("./docs/"));
 
 
-    return merge(fonts, img, jsmap, cssmap, jsmin, jsmap, favicons);
+    return merge(fonts, img, jsmap, cssmap, jsmin, jsmap, favicons, cname);
 });
-gulp.task('libraries', function() {
+gulp.task('libraries', function () {
 
     // Bootstrap
     var scripts = gulp.src([
-        './node_modules/bootstrap/dist/js/bootstrap.min.js',
-        './node_modules/bootstrap/dist/js/bootstrap.min.js.map',
-        "./node_modules/jquery/dist/jquery.min.js",
-        "./node_modules/jquery/dist/jquery.min.map",
-        "./node_modules/popper.js/dist/umd/popper.min.js",
-        "./node_modules/popper.js/dist/umd/popper.min.js.map"
-        
-      ])
-      .pipe(gulp.dest('./docs/js/'));
-      var styles = gulp.src([
-        './node_modules/bootstrap/dist/css/bootstrap.min.css',
-        './node_modules/bootstrap/dist/css/bootstrap.min.css.map'
-        
-      ])
-      .pipe(gulp.dest('./docs/css/'));
-  
-   
-      return merge(scripts, styles);
-  });
+            './node_modules/bootstrap/dist/js/bootstrap.min.js',
+            './node_modules/bootstrap/dist/js/bootstrap.min.js.map',
+            "./node_modules/jquery/dist/jquery.min.js",
+            "./node_modules/jquery/dist/jquery.min.map",
+            "./node_modules/popper.js/dist/umd/popper.min.js",
+            "./node_modules/popper.js/dist/umd/popper.min.js.map"
+
+        ])
+        .pipe(gulp.dest('./docs/js/'));
+    var styles = gulp.src([
+            './node_modules/bootstrap/dist/css/bootstrap.min.css',
+            './node_modules/bootstrap/dist/css/bootstrap.min.css.map'
+
+        ])
+        .pipe(gulp.dest('./docs/css/'));
+
+
+    return merge(scripts, styles);
+});
 gulp.task("build", gulp.series("clean:docs",
     gulp.parallel("styles", "html", "assets", "scripts", "libraries")
 ), function (callback) {
