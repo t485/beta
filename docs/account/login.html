@@ -3,18 +3,17 @@
 <html lang="en">
 
 <head>
-	{% block coreMeta %}
+	
 		<meta charset="utf-8">
 		<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-		<meta content="{% if description %} {{description}} {% else %} The official Boy Scout Troop 485 website. {% endif %}" name="description">
-	{% endblock %}
-	{% block meta %} {% endblock %}
-	{% block title %}
-		{% block titletag -%}
-			<title>Troop 485{%- if title %} - {% endif -%}{{-title}}</title>
-		{% endblock %}
-	{% endblock %}
-	{% block coreStyles %}
+		<meta content=" The official Boy Scout Troop 485 website. " name="description">
+	
+	 
+	
+		<title>Troop 485</title>
+		
+	
+	
 		<!-- Bootstrap core CSS -->
 		<link href="/css/bootstrap.min.css" rel="stylesheet">
 		<!-- Custom fonts for this template -->
@@ -24,15 +23,15 @@
 		<!-- Custom styles for this template -->
 		<link href="/css/theme.css" rel="stylesheet">
 		<link href="/css/t485.css" rel="stylesheet">
-	{% endblock %}
-	{% block favicons %}
+	
+	
 		<!-- Favicons -->
 		<link rel="apple-touch-icon" sizes="152x152" href="/favicons/apple-touch-icon-152x152.png">
 		<link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon-180x180.png">
 		<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
-	{% endblock %}
-	{% block styles %}{% endblock %}
-	{% block checkFirebaseError %}
+	
+	
+	
 		<script>
 			try {
 				localStorage.setItem('firebaseErrorTest', 'test');
@@ -47,24 +46,24 @@
 				throw 'privateBrowsingError';
 			}
 		</script>
-	{% endblock %}
+	
 </head>
 
 <body>
-	{% block header %}
+	
 		<div class="text-center">
 			<a href="/">
 				<img src="/img/header.png" alt="Boy Scout Troop 485" id="header">
 			</a>
 		</div>
-	{% endblock %}
-	{% block alertBox %}
-		{# note: when adding custom alerts to a page via template, call super() first instead of retyping the alertbox div #}
+	
+	
+		
 
 		<div id="alertBox">
 		</div>
-	{% endblock %}
-	{% block navbar %}
+	
+	
 		<!-- Navigation -->
 
 
@@ -101,35 +100,48 @@
 				</div>
 			</div>
 		</nav>
-	{% endblock %}
-	{% block mainOuter %}
+	
+	
 
 		<div class="container">
-			{% block main %}
+			
 
-				<div class="row">
-					<div class="box">
-						<div class="col-lg-12">
-							<h2 class="primary-heading">Work in Progress</h2>
+<div class="row col-lg-12">
+    <div class="box w-100">
+        <div class="col-lg-12">
+            <h2 class="primary-heading">Login</h2>
+			
+
+            <div>
+                <div class="form-group">
+                    <label for="email">Email address:</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter your email...">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter your password...">
+                </div>
+                <button class="btn btn-primary btn-block" id="login">Login</button>
+				<p class="text-danger" id="error"></p>
+                <p id="account-tray" class="text-center"><a href="/account/create.html">Create an account</a> | <a href="/account/forgotpassword.html">Forgot password</a></p>
+            </div>
+        </div>
+    </div>
+</div>
 
 
-							<p>This page is not done yet! We apologize for any inconvenience this may cause.</p>
-						</div>
-					</div>
-				</div>
-			{%endblock %}
 		</div>
-	{% endblock %}
-	{% block footer %}
+	
+	
 
 		<footer class="footer text-faded text-center py-5">
 			<div class="container">
 				<p class="m-0 small">Copyright &copy; 2006-2018 Troop 485, Silicon Valley Monterey Bay Council, Boy Scouts of America.</p>
 			</div>
 		</footer>
-	{% endblock %}
 	
-	{% block firebase %}
+	
+	
 		<script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-app.js">
 		</script>
 		<script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-auth.js">
@@ -154,8 +166,8 @@
 			};
 			firebase.initializeApp(config);
 		</script>
-	{% endblock %}
-	{% block coreScripts %}
+	
+	
 		<!-- Bootstrap core JavaScript -->
 
 		<script src="/js/jquery.min.js">
@@ -166,6 +178,30 @@
 		</script>
 		<script src="/js/t485.js">
 		</script>
-	{% endblock %}
-	{% block scripts %} {% endblock %}
+	
+	
+<script>
+
+	firebase.auth().onAuthStateChanged(function(user) {
+		if (user) {
+			$("#error").html("");
+			if (getQuery("continue") == "" || getQuery("continue") == null) {
+				window.location.href = "/account/";
+			} else {
+				window.location.href = getQuery("continue");
+			}
+		}
+	});
+$("#login").click(function() {
+	var email = $("#email").val();
+	var password = $("#password").val();
+	$("#error").html("");
+    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+		$("#error").html("Error: No user was found using that email/password combination(incorrect password for the given email).");
+		console.log(3);
+    })
+	
+});
+</script>
+
 </body>
