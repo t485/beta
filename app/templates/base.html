@@ -11,7 +11,7 @@
 	{% block meta %} {% endblock %}
 	{% block title %}
 		{% block titletag -%}
-			<title>Troop 485{%- if title %} - {% endif -%}{{-title}}</title>
+			<title>Troop 485{%- if title %} - {% elif title == "" -%}{#If title is empty dont display dash, even if page is present#}{%- elif page %} - {% elif page == "" %} - {% endif -%}{%- if title -%}{{-title-}}{%- elif title == "" -%}{{-title-}}{% else -%}{{-page}}{%endif%}</title>
 		{% endblock %}
 	{% endblock %}
 	{% block coreStyles %}
@@ -78,13 +78,14 @@
 
 				<div class="collapse navbar-collapse" id="navbarResponsive">
 					<ul class="navbar-nav mx-auto">
+					
+						
 						<li class="nav-item px-lg-4">
 							<a class="nav-link text-uppercase text-expanded" href="/">Home</a>
 						</li>
 
-
 						<li class="nav-item px-lg-4">
-							<a class="nav-link text-uppercase text-expanded" href="/template.html">Template</a>
+							<a class="nav-link text-uppercase text-expanded" href="/calendar.html">Calendar</a>
 						</li>
 
 

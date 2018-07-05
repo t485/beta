@@ -77,13 +77,14 @@
 
 				<div class="collapse navbar-collapse" id="navbarResponsive">
 					<ul class="navbar-nav mx-auto">
+					
+						
 						<li class="nav-item px-lg-4">
 							<a class="nav-link text-uppercase text-expanded" href="/">Home</a>
 						</li>
 
-
 						<li class="nav-item px-lg-4">
-							<a class="nav-link text-uppercase text-expanded" href="/template.html">Template</a>
+							<a class="nav-link text-uppercase text-expanded" href="/calendar.html">Calendar</a>
 						</li>
 
 
@@ -110,7 +111,7 @@
     <div class="box w-100">
         <div class="col-lg-12">
             <h2 class="primary-heading">Create Account</h2>
-			
+			<p class="text-muted">You must be a member of Troop 485 to create an account.</p>
 
             <div>
                 <div class="form-group">
@@ -190,22 +191,22 @@
 		if (user) {
 			$("#error").html("");
 			if (getQuery("continue") == "" || getQuery("continue") == null) {
-				window.location.href = "/account/";
+				window.location.href = "/account/?ref=create";
 			} else {
 				window.location.href = getQuery("continue");
 			}
 		}
 	});
-$("#login").click(function() {
-	var email = $("#email").val();
-	var password = $("#password").val();
-	$("#error").html("");
-    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-		$("#error").html("Error: No user was found using that email/password combination(incorrect password for the given email).");
-		console.log(3);
-    })
-	
-});
+    $("#create").click(function() {
+        var email = $("#email").val();
+        var password = $("#password").val();
+        $("#error").html("");
+        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+            $("#error").html("Error: No user was found using that email/password combination(incorrect password for the given email).");
+            console.log(3);
+        })
+        
+    });
 </script>
 
 </body>
