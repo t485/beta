@@ -370,7 +370,6 @@
             for (i = 0; i < values[0].length + 1; i ++) {//+1 for the patrol row
                 valueNames.push("col" + i);
             }
-            console.log(valueNames);
             var options = {
                 valueNames: valueNames
             };
@@ -381,7 +380,6 @@
     });
     
     function getSlackLink(username, slackToken, callback) {
-        console.log("UNN0187:" + username);
         firebase.database().ref("/directory/slackUID/").once("value").then(function(snapshot){
             var data = snapshot.val();
             var encodedUsername = encodeUsername(username);
@@ -440,14 +438,11 @@
             return;
         }
         
-       console.log(scouts[id].scout.slack);
         if (scouts[id].scout.slack == "" || scouts[id].scout.slack == undefined) {
             $(".infoModal-scoutSlackDMLink").attr("href", null);
             $(".infoModal-scoutSlackUsername").html("<i>None</i>");
             $(".infoModal-scoutSlackDMLoadingText").text("");
         } else {
-            console.log(true)
-            console.log(scouts[id].scout.slack)
             $(".infoModal-scoutSlackUsername").text("@" + scouts[id].scout.slack);
             $(".infoModal-scoutSlackDMLoadingText").text("(profile loading...)");
             getSlackLink(scouts[id].scout.slack, keys.slackToken, function(id, username, slackApiCalled) {
@@ -482,12 +477,39 @@
     $(document).ready(function() {
         filterselectchange();
         $("#infoModal").on("hide.bs.modal", function() {
-            console.log("hidden");
             history.pushState("", document.title, window.location.pathname + window.location.search);
 
         });
     })
     $("#filter-select").change(filterselectchange);
 </script>
+
+	
+<div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title infoModal-scoutFullName">Loading...</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <b>Slack:</b><a class="infoModal-scoutSlackDMLink" target="_blank"><span class="infoModal-scoutSlackUsername"></span><span class="infoModal-scoutSlackDMLoadingText"></span></a>
+                    </li>
+                    <li class="list-group-item">Dapibus ac facilisis in</li>
+                    <li class="list-group-item">Morbi leo risus</li>
+                    <li class="list-group-item">Porta ac consectetur ac</li>
+                    <li class="list-group-item">Vestibulum at eros</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
