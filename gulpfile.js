@@ -96,6 +96,7 @@ gulp.task('libraries', function () {
             "./node_modules/popper.js/dist/umd/popper.min.js",
             "./node_modules/popper.js/dist/umd/popper.min.js.map",
             "./node_modules/bootstrap-select/dist/js/bootstrap-select.min.js",
+            "./node_modules/list.js/dist/list.min.js"
 
         ])
         .pipe(gulp.dest('./docs/js/'));

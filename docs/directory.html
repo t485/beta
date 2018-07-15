@@ -134,70 +134,71 @@
             <h2 class="primary-heading">
                 Directory
             </h2>
-            
-            <b>Show:</b>
-            <select class="selectpicker form-control" multiple id="filter-select" data-live-search="true">
-                <optgroup label="Scout">
-                    <option value="0" selected>Scout's First Name</option>
-                    <option value="1" selected>Scout's Last Name</option>
-                    <option value="2" selected>Patrol</option>
-                    <option value="3" selected>Scout's E-mail</option>
-                    <option value="4" selected>Scout's Home Phone</option>
-                    <option value="5" >Slack Username</option>
-                    <option value="6">Date Joined Troop 485</option>
-                    <option value="7">Active</option>
-                    <option value="8">Wilderness First Aid Trained</option>
-                    <option value="9">School Attending</option>
-                    <option value="10" selected>Scout's Cell Phone</option>
-                </optgroup>
-                <optgroup label="Father">
-                    <option value="11">Father's First Name</option>
-                    <option value="12">Father's Last Name</option>
-                    <option value="13">Father's Cell Phone</option>
-                    <option value="14">Father's E-mail</option>
-                    <option value="15">Father's Slack Username</option>
-                </optgroup>
-                <optgroup label="Mother">
-                    <option value="16">Mother's First Name</option>
-                    <option value="17">Mother's Last Name</option>
-                    <option value="18">Mother's Cell Phone</option>
-                    <option value="19">Mother's E-mail</option>
-                    <option value="20">Mother's Slack Username</option>
-                </optgroup>
-            </select>
-            <hr>
-            <table class="table table-hover" id="table">
-                <thead>
-                    <tr>
-                        
-                    <th scope="col" class="col0" data-col="0">Scout's First Name</th>
-                    <th scope="col" class="col1" data-col="1">Scout's Last Name</th>
-                    <th scope="col" class="col2" data-col="2">Patrol</th>
-                    <th scope="col" class="col3" data-col="3">Scout's E-mail:</th>
-                    <th scope="col" class="col4" data-col="4">Scout's Home Phone</th>
-                    <th scope="col" class="col5" data-col="5">Slack Username</th>
-                    <th scope="col" class="col6" data-col="6">Date Joined Troop 485</th>
-                    <th scope="col" class="col7" data-col="7">Active (Y)es/ (R)arely/ (N)o</th>
-                    <th scope="col" class="col8" data-col="8">Wilderness First Aid Trained</th>
-                    <th scope="col" class="col9" data-col="9">School Attending</th>
-                    <th scope="col" class="col10" data-col="10">Scout's Cell Phone</th>
-                    <th scope="col" class="col11" data-col="11">Father's First Name</th>
-                    <th scope="col" class="col12" data-col="12">Father's Last Name</th>
-                    <th scope="col" class="col13" data-col="13">Father's Cell Phone</th>
-                    <th scope="col" class="col14" data-col="14">Father's E-mail</th>
-                    <th scope="col" class="col15" data-col="15">Father's Slack Username or None</th>
-                    <th scope="col" class="col16" data-col="16">Mother's First Name</th>
-                    <th scope="col" class="col17" data-col="17">Mother's Last Name</th>
-                    <th scope="col" class="col18" data-col="18">Mother's Cell Phone</th>
-                    <th scope="col" class="col19" data-col="19">Mother's E-mail</th>
-                    <th scope="col" class="col20" data-col="20">Mother's Slack Username or None</th>
-                    </tr>
-                </thead>
-                <tbody id="dir-body">
-                    <tr id="loading-text"><td colspan="21">Loading...</td></tr>
-                </tbody>
-            </table>
-             
+            <div id="directory-list">
+                <input type="text" class="form-control fuzzy-search">
+                <b>Show:</b>
+                <select class="selectpicker form-control" multiple id="filter-select" data-live-search="true">
+                    <optgroup label="Scout">
+                        <option value="0" selected>Scout's First Name</option>
+                        <option value="1" selected>Scout's Last Name</option>
+                        <option value="2" selected>Patrol</option>
+                        <option value="3" selected>Scout's E-mail</option>
+                        <option value="4" selected>Scout's Home Phone</option>
+                        <option value="5" >Slack Username</option>
+                        <option value="6">Date Joined Troop 485</option>
+                        <option value="7">Active</option>
+                        <option value="8">Wilderness First Aid Trained</option>
+                        <option value="9">School Attending</option>
+                        <option value="10" selected>Scout's Cell Phone</option>
+                    </optgroup>
+                    <optgroup label="Father">
+                        <option value="11">Father's First Name</option>
+                        <option value="12">Father's Last Name</option>
+                        <option value="13">Father's Cell Phone</option>
+                        <option value="14">Father's E-mail</option>
+                        <option value="15">Father's Slack Username</option>
+                    </optgroup>
+                    <optgroup label="Mother">
+                        <option value="16">Mother's First Name</option>
+                        <option value="17">Mother's Last Name</option>
+                        <option value="18">Mother's Cell Phone</option>
+                        <option value="19">Mother's E-mail</option>
+                        <option value="20">Mother's Slack Username</option>
+                    </optgroup>
+                </select>
+                <hr>
+                <table class="table table-hover" id="table">
+                    <thead>
+                        <tr>
+                            
+                        <th scope="col" class="col0" data-col="0">Scout's First Name</th>
+                        <th scope="col" class="col1" data-col="1">Scout's Last Name</th>
+                        <th scope="col" class="col2" data-col="2">Patrol</th>
+                        <th scope="col" class="col3" data-col="3">Scout's E-mail:</th>
+                        <th scope="col" class="col4" data-col="4">Scout's Home Phone</th>
+                        <th scope="col" class="col5" data-col="5">Slack Username</th>
+                        <th scope="col" class="col6" data-col="6">Date Joined Troop 485</th>
+                        <th scope="col" class="col7" data-col="7">Active (Y)es/ (R)arely/ (N)o</th>
+                        <th scope="col" class="col8" data-col="8">Wilderness First Aid Trained</th>
+                        <th scope="col" class="col9" data-col="9">School Attending</th>
+                        <th scope="col" class="col10" data-col="10">Scout's Cell Phone</th>
+                        <th scope="col" class="col11" data-col="11">Father's First Name</th>
+                        <th scope="col" class="col12" data-col="12">Father's Last Name</th>
+                        <th scope="col" class="col13" data-col="13">Father's Cell Phone</th>
+                        <th scope="col" class="col14" data-col="14">Father's E-mail</th>
+                        <th scope="col" class="col15" data-col="15">Father's Slack Username or None</th>
+                        <th scope="col" class="col16" data-col="16">Mother's First Name</th>
+                        <th scope="col" class="col17" data-col="17">Mother's Last Name</th>
+                        <th scope="col" class="col18" data-col="18">Mother's Cell Phone</th>
+                        <th scope="col" class="col19" data-col="19">Mother's E-mail</th>
+                        <th scope="col" class="col20" data-col="20">Mother's Slack Username or None</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dir-body" class="list">
+                        <tr id="loading-text"><td colspan="21">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -252,6 +253,7 @@
 		</script>
 	
 	
+<script src="/js/list.min.js"></script>
 <script src="/js/bootstrap-select.min.js"></script>
 
 <script>
@@ -261,7 +263,8 @@
     
         $.ajax({
             url:`https://sheets.googleapis.com/v4/spreadsheets/${keys.id}/values/${keys.sheets[0]}!A2:T?majorDimension=ROWS&valueRenderOption=FORMATTED_VALUE&key=${keys.api}`,
-            method:"GET"
+            method:"GET",
+            dataType:"json"
         }).done(function(data){
             $("#loading-text").addClass("hidden");
             var values = data.values;
@@ -270,8 +273,11 @@
                             ["mother", "firstName"], ["mother", "lastName"], ["mother", "cellPhone"], ["mother", "email"], ["mother", "slackUsername"]];
             var scouts = [];
             var patrol = keys.sheets[0];
+            //loop through each cell of each row and populate it with the data
             for (i = 0; i < values.length; i ++) {
                 var line = "<tr class='table-row'>";
+
+                //also populate the scouts object
                 scouts[i] = {
                     scout:{},
                     father:{},
@@ -306,14 +312,110 @@
                 
                 $("#dir-body").append(line);
             }
-            console.log(scouts);
             $("#table").on("click", ".table-row", function (e) {
-                console.log($(e.target).attr("data-row"));
+                var id = $(e.target).attr("data-row");
+                window.location.hash = id;
             });
+            
+            $(window).on("hashchange", function() {
+                onhashchange(scouts, keys);
+            });
+            onhashchange(scouts, keys);
 
+            //init list.js
+            var valueNames = [];
+            for (i = 0; i < values[0].length + 1; i ++) {//+1 for the patrol row
+                valueNames.push("col" + i);
+            }
+            console.log(valueNames);
+            var options = {
+                valueNames: valueNames
+            };
+
+            var list = new List('directory-list', options);
         });
         
     });
+    
+    function getSlackLink(username, slackToken, callback) {
+        firebase.database().ref("/directory/slackUID/").once("value").then(function(snapshot){
+            var data = snapshot.val();
+            var encodedUsername = encodeUsername(username);
+            if (data != null && data[encodedUsername] != null && data[encodedUsername] != undefined) {
+                //third parameter(boolean) is for debugging, it states whether the slack api was used.
+                callback(data[username], username, false);
+                return;
+            } else {
+                $.ajax({
+                    url:`https://slack.com/api/users.list?token=${slackToken}`,
+                    method:"GET",
+                    dataType:"json"
+                }).done(function(userlistdata){
+                    var userlist = userlistdata.members;
+                    var updates = {};
+                    
+                    for (i = 0; i < userlist.length; i ++) { 
+                        if (userlist[i].deleted) {
+                            continue;
+                        }
+                        if (userlist[i].profile.display_name != "" && userlist[i].profile.display_name != undefined) {
+                            displayName = userlist[i].profile.display_name;
+                        } else {
+                            displayName = userlist[i].profile.real_name;
+                        }
+                        
+                        updates[encodeUsername(displayName)] = userlist[i].id;
+                        if (displayName == username) {
+                            callback(userlist[i].id, username, true);
+                        }
+                    }
+                    firebase.database().ref("/directory/slackUID/").update(updates);
+                });
+            }
+        });
+    }
+    function encodeUsername(username) {
+        //modified encodeURIComponent
+        var result = encodeURIComponent(username);//start by encoding URI chars
+        //then encode .
+        return result.replaceAll(".", "%2E");//%2E is UTF-8 for .(period)
+    }
+    function decodeUsername(encodedusername) {
+        //decodeURIComponent decodes ALL UTF-8, not just the stuff encodeURIComponent encodes, so it 
+        //also decodes %2E, or .(period).
+        //This function exists just for clarity.
+        return decodeURIComponent(encodedusername);
+        
+    }
+    function onhashchange(scouts, keys) {
+        if (window.location.hash == "") {
+            return;
+        }
+        var id = parseInt(window.location.hash.substring(1), 10);
+        if (Number.isNaN(id) || id < 0 || id >= scouts.length) {
+            return;
+        }
+        
+       console.log(scouts[id].scout.slack);
+        if (scouts[id].scout.slack == "" || scouts[id].scout.slack == undefined) {
+            $(".infoModal-scoutSlackDMLink").attr("href", null);
+            $(".infoModal-scoutSlackUsername").html("<i>None</i>");
+            $(".infoModal-scoutSlackDMLoadingText").text("");
+        } else {
+            console.log(true)
+            console.log(scouts[id].scout.slack)
+            $(".infoModal-scoutSlackUsername").text("@" + scouts[id].scout.slack);
+            $(".infoModal-scoutSlackDMLoadingText").text("(profile loading...)");
+            getSlackLink(scouts[id].scout.slack, keys.slackToken, function(id, username, slackApiCalled) {
+                $(".infoModal-scoutSlackDMLink").attr("href", "https://t485.slack.com/team/" + id);
+                $(".infoModal-scoutSlackDMLoadingText").text("");
+            });
+            
+        }
+        $(".infoModal-scoutFullName").text(scouts[id].scout.firstName + " " + scouts[id].scout.lastName);
+        $("#infoModal").modal("show");
+            
+    }
     function getColVisibility(col) {
         
         var selected = $("#filter-select").val().map(str => parseInt(str, 10));
@@ -335,9 +437,13 @@
     }
     $(document).ready(function() {
         filterselectchange();
+        $("#infoModal").on("hide.bs.modal", function() {
+            console.log("hidden");
+            history.pushState("", document.title, window.location.pathname + window.location.search);
+
+        });
     })
     $("#filter-select").change(filterselectchange);
 </script>
 
-	 
 </body>
