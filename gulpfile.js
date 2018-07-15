@@ -79,9 +79,11 @@ gulp.task("assets", function () {
         .pipe(gulp.dest("./docs/favicons/"));
     var cname = gulp.src("./app/CNAME")
         .pipe(gulp.dest("./docs/"));
+    var fonts = gulp.src("./app/fonts/**")
+        .pipe(gulp.dest("./docs/fonts/"));
 
 
-    return merge(fonts, img, jsmap, cssmap, jsmin, jsmap, favicons, cname);
+    return merge(fonts, img, jsmap, cssmap, jsmin, jsmap, favicons, cname, fonts);
 });
 gulp.task('libraries', function () {
 
@@ -92,13 +94,15 @@ gulp.task('libraries', function () {
             "./node_modules/jquery/dist/jquery.min.js",
             "./node_modules/jquery/dist/jquery.min.map",
             "./node_modules/popper.js/dist/umd/popper.min.js",
-            "./node_modules/popper.js/dist/umd/popper.min.js.map"
+            "./node_modules/popper.js/dist/umd/popper.min.js.map",
+            "./node_modules/bootstrap-select/dist/js/bootstrap-select.min.js",
 
         ])
         .pipe(gulp.dest('./docs/js/'));
     var styles = gulp.src([
             './node_modules/bootstrap/dist/css/bootstrap.min.css',
-            './node_modules/bootstrap/dist/css/bootstrap.min.css.map'
+            './node_modules/bootstrap/dist/css/bootstrap.min.css.map',
+            "./node_modules/bootstrap-select/dist/css/bootstrap-select.min.css",
 
         ])
         .pipe(gulp.dest('./docs/css/'));
