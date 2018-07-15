@@ -19,6 +19,19 @@ function getQuery(e) {
     return null === n ? "" : decodeURIComponent(n[1].replace(/\+/g, " "))
 }
 
+
+//http://stackoverflow.com/a/17606289/5511561s
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(escapeRegExp(search), 'g'), replacement);
+};
+
+//http://stackoverflow.com/a/17606289/5511561s (footnote), 
+
+function escapeRegExp(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+  }
+
 //google anylatics
 
 (function(i, s, o, g, r, a, m) {
