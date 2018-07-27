@@ -195,7 +195,7 @@ $("#login").click(function() {
 	var password = $("#password").val();
 	$("#error").html("");
     firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-		$("#error").html("Error: No user was found using that email/password combination(incorrect password for the given email).");
+		$("#error").html("Error: Email/Password incorrect.");
 		console.log(3);
     })
 	
