@@ -140,73 +140,88 @@
                 <form class="pt-1">
                     <div class="row">
                         <div class="col">
-                        <b>Sort:</b>
-                            <select class="selectpicker form-control" data-live-search="true">
-                                <optgroup label="Scout">
-                                    <option value="0">Scout's First Name</option>
-                                    <option value="1" selected>Scout's Last Name <i class="fas fa-sort-up"></i></option>
-                                    <option value="2">Patrol</option>
-                                    <option value="3">Scout's E-mail</option>
-                                    <option value="4">Scout's Home Phone</option>
-                                    <option value="5">Slack Username</option>
-                                    <option value="6">Date Joined Troop 485</option>
-                                    <option value="7">Active</option>
-                                    <option value="8">Wilderness First Aid Trained</option>
-                                    <option value="9">School Attending</option>
-                                    <option value="10">Scout's Cell Phone</option>
-                                </optgroup>
-                                <optgroup label="Father">
-                                    <option value="11">Father's First Name</option>
-                                    <option value="12">Father's Last Name</option>
-                                    <option value="13">Father's Cell Phone</option>
-                                    <option value="14">Father's E-mail</option>
-                                    <option value="15">Father's Slack Username</option>
-                                </optgroup>
-                                <optgroup label="Mother">
-                                    <option value="16">Mother's First Name</option>
-                                    <option value="17">Mother's Last Name</option>
-                                    <option value="18">Mother's Cell Phone</option>
-                                    <option value="19">Mother's E-mail</option>
-                                    <option value="20">Mother's Slack Username</option>
-                                </optgroup>
-                            </select>
+                            <div id="sort-select-box">
+                                <b>Sort by:</b>
+                                <select class="selectpicker form-control" data-live-search="true" id="sort-select">
+                                    <optgroup label="Scout">
+                                        <option value="0">Scout's First Name</option>
+                                        <option value="1" selected>Scout's Last Name </option>
+                                        <option value="2">Patrol</option>
+                                        <option value="3">Scout's E-mail</option>
+                                        <option value="4">Scout's Home Phone</option>
+                                        <option value="5">Slack Username</option>
+                                        <option value="6">Date Joined Troop 485</option>
+                                        <option value="7">Active</option>
+                                        <option value="8">Wilderness First Aid Trained</option>
+                                        <option value="9">School Attending</option>
+                                        <option value="10">Scout's Cell Phone</option>
+                                    </optgroup>
+                                    <optgroup label="Father">
+                                        <option value="11">Father's First Name</option>
+                                        <option value="12">Father's Last Name</option>
+                                        <option value="13">Father's Cell Phone</option>
+                                        <option value="14">Father's E-mail</option>
+                                        <option value="15">Father's Slack Username</option>
+                                    </optgroup>
+                                    <optgroup label="Mother">
+                                        <option value="16">Mother's First Name</option>
+                                        <option value="17">Mother's Last Name</option>
+                                        <option value="18">Mother's Cell Phone</option>
+                                        <option value="19">Mother's E-mail</option>
+                                        <option value="20">Mother's Slack Username</option>
+                                    </optgroup>
+                                </select>
+                            </div>
                         </div>
                         <div class="col">
-                        <b>Show:</b>
-                            <select class="selectpicker form-control" multiple id="filter-select" data-live-search="true">
-                                <optgroup label="Scout">
-                                    <option value="0" selected>Scout's First Name</option>
-                                    <option value="1" selected>Scout's Last Name</option>
-                                    <option value="2" selected>Patrol</option>
-                                    <option value="3" selected>Scout's E-mail</option>
-                                    <option value="4" selected>Scout's Home Phone</option>
-                                    <option value="5" >Slack Username</option>
-                                    <option value="6">Date Joined Troop 485</option>
-                                    <option value="7">Active</option>
-                                    <option value="8">Wilderness First Aid Trained</option>
-                                    <option value="9">School Attending</option>
-                                    <option value="10" selected>Scout's Cell Phone</option>
-                                </optgroup>
-                                <optgroup label="Father">
-                                    <option value="11">Father's First Name</option>
-                                    <option value="12">Father's Last Name</option>
-                                    <option value="13">Father's Cell Phone</option>
-                                    <option value="14">Father's E-mail</option>
-                                    <option value="15">Father's Slack Username</option>
-                                </optgroup>
-                                <optgroup label="Mother">
-                                    <option value="16">Mother's First Name</option>
-                                    <option value="17">Mother's Last Name</option>
-                                    <option value="18">Mother's Cell Phone</option>
-                                    <option value="19">Mother's E-mail</option>
-                                    <option value="20">Mother's Slack Username</option>
-                                </optgroup>
-                            </select>
-                            
+                            <div class="sortby-select-box">
+                                <b> Sort Order: </b>
+                                <select class="selectpicker form-control" id="sortby-select">
+                                    <option value="asc" selected>Ascending</option>
+                                    <option value="desc">Descending</option>
+                                        
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div id="filter-select-box">
+                                <b>Show:</b>
+                                    <select class="selectpicker form-control" multiple id="filter-select" data-live-search="true" data-actions-box="true">
+                                        <optgroup label="Scout">
+                                            <option value="0" selected>Scout's First Name</option>
+                                            <option value="1" selected>Scout's Last Name</option>
+                                            <option value="2" selected>Patrol</option>
+                                            <option value="3" selected>Scout's E-mail</option>
+                                            <option value="4" selected>Scout's Home Phone</option>
+                                            <option value="5" >Slack Username</option>
+                                            <option value="6">Date Joined Troop 485</option>
+                                            <option value="7">Active</option>
+                                            <option value="8">Wilderness First Aid Trained</option>
+                                            <option value="9">School Attending</option>
+                                            <option value="10" selected>Scout's Cell Phone</option>
+                                        </optgroup>
+                                        <optgroup label="Father">
+                                            <option value="11">Father's First Name</option>
+                                            <option value="12">Father's Last Name</option>
+                                            <option value="13">Father's Cell Phone</option>
+                                            <option value="14">Father's E-mail</option>
+                                            <option value="15">Father's Slack Username</option>
+                                        </optgroup>
+                                        <optgroup label="Mother">
+                                            <option value="16">Mother's First Name</option>
+                                            <option value="17">Mother's Last Name</option>
+                                            <option value="18">Mother's Cell Phone</option>
+                                            <option value="19">Mother's E-mail</option>
+                                            <option value="20">Mother's Slack Username</option>
+                                        </optgroup>
+                                    </select>
+                                    
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    </form>
-                
+                </form>
+                <p class="text-muted">Click a table row for more information on that scout.</p>
                 <hr>
                 <table class="table table-hover" id="table">
                     <thead>
@@ -318,7 +333,7 @@
             var patrol = keys.sheets[0];
             //loop through each cell of each row and populate it with the data
             for (i = 0; i < values.length; i ++) {
-                var line = "<tr class='table-row'>";
+                var line = "<tr class='table-row patrol-" + keys.sheets[0].toLowerCase() + "'>";
 
                 //also populate the scouts object
                 scouts[i] = {
@@ -373,8 +388,16 @@
             var options = {
                 valueNames: valueNames
             };
-
+            console.log(valueNames);
+            console.log(1);
             var list = new List('directory-list', options);
+            console.log(2);
+            $("#sort-select").change(function() {
+                onsortchange(list);
+            });
+            $("#sortby-select").change(function() {
+                onsortchange(list);
+            });
         });
         
     });
@@ -385,7 +408,7 @@
             var encodedUsername = encodeUsername(username);
             if (data != null && data[encodedUsername] != null && data[encodedUsername] != undefined) {
                 //third parameter(boolean) is for debugging, it states whether the slack api was used.
-                callback(data[username], username, false);
+                callback(data[encodedUsername], username, false);
                 return;
             } else {
                 $.ajax({
@@ -429,6 +452,12 @@
         return decodeURIComponent(encodedusername);
         
     }
+    function onsortchange(list) {
+        var order = $("#sortby-select").val();
+        var field = "col" + $("#sort-select").val();
+        list.sort(field, { order: order });//order is asc or desc, field is a column
+    }
+
     function onhashchange(scouts, keys) {
         if (window.location.hash == "") {
             return;
@@ -482,6 +511,15 @@
         });
     })
     $("#filter-select").change(filterselectchange);
+    
+
+    
+
+    //If on moible, tell seectpicker to defualt to system defualt select.
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+        $('.selectpicker').selectpicker('mobile');
+    }
+
 </script>
 
 	

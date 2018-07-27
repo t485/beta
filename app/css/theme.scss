@@ -151,28 +151,12 @@ p {
     color: #777;
 }
 
-.text-primary {
-    color: #e6a756 !important;
-}
-
-.bg-primary {
-    background-color: #e6a756 !important;
-}
 
 .btn {
     box-shadow: 0 3px 3px 0 rgba(33, 37, 41, 0.1);
 }
 
-.btn-primary {
-    background-color: #e6a756;
-    border-color: #e6a756;
-    &:active,
-    &:focus,
-    &:hover {
-        background-color: #df902a;
-        border-color: #df902a;
-    }
-}
+
 
 .font-weight-light {
     font-weight: 100 !important;
