@@ -32,8 +32,8 @@
                 <form class="pt-1">
                     <div class="row">
                         <div class="col">
-                        <b>Sort:</b>
-                            <select class="selectpicker form-control" data-live-search="true">
+                        <b>Sort by:</b>
+                            <select class="selectpicker form-control" data-live-search="true" id="sortby-select">
                                 <optgroup label="Scout">
                                     <option value="0">Scout's First Name</option>
                                     <option value="1" selected>Scout's Last Name <i class="fas fa-sort-up"></i></option>
@@ -64,8 +64,15 @@
                             </select>
                         </div>
                         <div class="col">
+                            <b>Sort order:</b>
+                            <select class="selectpicker form-control" id="sortorder-select">
+                                <option value="asc">Ascending</option>
+                                <option value="desc">Descending</option>
+                            </select>
+                        </div>
+                        <div class="col">
                         <b>Show:</b>
-                            <select class="selectpicker form-control" multiple id="filter-select" data-live-search="true">
+                            <select class="selectpicker form-control" multiple id="filter-select" data-live-search="true" data-actions-box="true">
                                 <optgroup label="Scout">
                                     <option value="0" selected>Scout's First Name</option>
                                     <option value="1" selected>Scout's Last Name</option>
@@ -218,6 +225,11 @@
             };
 
             var list = new List('directory-list', options);
+
+            $("#sortby-select, #sortorder-select").change(function() {
+                console.log($("#sortby-select").val());
+                list.sort("col" + $("#sortby-select").val(), { order: $("#sortorder-select").val() });
+            });
         });
         
     });
@@ -325,6 +337,14 @@
         });
     })
     $("#filter-select").change(filterselectchange);
+    
+    
+
+
+    //If on moible, tell seectpicker to defualt to system defualt select.
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+        $('.selectpicker').selectpicker('mobile');
+    }
 </script>
 {% endblock %}
 {% block modals %}
