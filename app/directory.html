@@ -28,7 +28,7 @@
             </h2>
             <div id="directory-list">
                 <b>Search:</b>
-                <input type="text" class="form-control fuzzy-search" placeholder="Search by name, phone number, slack username, etc.">
+                <input type="text" class="form-control fuzzy-search" id="search" placeholder="Search by name, phone number, slack username, etc.">
                 <form class="pt-1">
                     <div class="row">
                         <div class="col">
@@ -106,7 +106,8 @@
                     </div>
                     </form>
                 
-                <hr>
+                <br>
+                <p>Select a row to view all information about that scout:</p>
                 <table class="table table-hover" id="table">
                     <thead>
                         <tr>
@@ -229,6 +230,8 @@
             $("#sortby-select, #sortorder-select").change(function() {
                 console.log($("#sortby-select").val());
                 list.sort("col" + $("#sortby-select").val(), { order: $("#sortorder-select").val() });
+                setURLQuery(setQuery("sortby", $("#sortby-select").val()));
+                setURLQuery(setQuery("sortorder", $("#sortorder-select").val()));
             });
         });
         
@@ -318,29 +321,80 @@
     }
     function filterselectchange(){
         var selected = $("#filter-select").val().map(str => parseInt(str, 10));
-        
+        var show = [];
         for (i = 0; i < 21; i ++) {
             if (selected.indexOf(i) > -1) {
                  $(".col" + i).removeClass("hidden");
+                 show.push(i);
+                 
             } else {
                  $(".col" + i).addClass("hidden");
             }
            
         }
+        setURLQuery(setQuery("filter", show.join(",")));
         
     }
     $(document).ready(function() {
-        filterselectchange();
+        processURLOptions();
         $("#infoModal").on("hide.bs.modal", function() {
+            //remove hash
             history.pushState("", document.title, window.location.pathname + window.location.search);
 
         });
     })
     $("#filter-select").change(filterselectchange);
-    
-    
+    function setURLQuery(fullQueryString) {
+        
+        var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + fullQueryString + window.location.hash;
+        if (history.pushState) {
+            window.history.pushState({path:newurl},'',newurl);
+        } else {
+            //window.location.href = newurl;
+        }
+    }
+    function processURLOptions() {
+        var options = {
+            filter:getQuery("filter").split(",").map( str => parseInt(str, 10)),
+            sortby:getQuery("sortby"),
+            sortorder:getQuery("sortorder")
+        }
 
+        setOptions(merge({
+            sortby:1,
+            sortorder:"asc",
+            filter:[0, 1, 2, 3, 4, 10]
+        }, options));
+    }
+    function merge(defualt, newobj) {
+        for (var key in newobj) {
+            if (newobj.hasOwnProperty(key)) defualt[key] = newobj[key];
+        }
+        return defualt;
+    }
 
+    function setOptions(options) {
+        console.log(options.filter);
+        for (i = 0; i <= 20; i ++) {
+            
+            console.log(i + ":" + (options.filter.indexOf(i) > -1 ? "" : null));
+            $("#filter-select option[value=" + i + "]").attr("selected", (options.filter.indexOf(i) > -1 ? "" : null));
+        }
+        $("#filter-select").selectpicker("refresh");
+
+        for (i = 0; i <= 20; i ++) {
+            
+            $("#sortby-select option[value=" + i + "]").attr("selected", (options.sortby == i ? "" : null));
+        }
+        $("#sortby-select").selectpicker("refresh");
+
+        
+        $("#sortorder-select option[value=" + options.sortorder + "]").attr("selected", "");
+        $("#sortorder-select option[value=" + (options.sortorder == "asc" ? "desc" : "asc") + "]").attr("selected", null);
+        $("#sortorder-select").selectpicker("refresh");
+
+    }
+    
     //If on moible, tell seectpicker to defualt to system defualt select.
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
         $('.selectpicker').selectpicker('mobile');

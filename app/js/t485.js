@@ -11,14 +11,26 @@ $('.dropdown a').click(function() {
     }
 });
 
-// http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
-function getQuery(e) {
-    e = e.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    let c = new RegExp("[\\?&]" + e + "=([^&#]*)"),
-        n = c.exec(location.search);
-    return null === n ? "" : decodeURIComponent(n[1].replace(/\+/g, " "))
+//https://stackoverflow.com/a/901144/5511561
+function getQuery(name) {
+    let url = window.location.href;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
+//https://stackoverflow.com/a/10997390/5511561
+function setQuery(name, value) {
+    if (value === 0) value = "0";//0 is falsey
+    let search = window.location.search;
+    let regex = new RegExp("([?;&])" + name + "[^&;]*[;&]?");
+    let query = search.replace(regex, "$1").replace(/&$/, '');
+
+    return (query.length > 2 ? query + "&" : "?") + (value ? name + "=" + value : '');
+}
 
 //http://stackoverflow.com/a/17606289/5511561s
 String.prototype.replaceAll = function(search, replacement) {
