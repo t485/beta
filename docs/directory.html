@@ -248,6 +248,7 @@
                     </tbody>
                 </table>
             </div>
+            <p>View/Edit the troop directory spreadsheet on <a target="_blank" class="link-google-sheet-dir">Google Sheets</a>.</p>
         </div>
     </div>
 </div>
@@ -308,60 +309,69 @@
 <script src="/js/bootstrap-select.min.js"></script>
 
 <script>
-        
+    var list = false;//false means uninitiated
     firebase.database().ref("/directory/keys/").once("value").then(function(snapshot){
         var keys = snapshot.val();
-    
+        $(".link-google-sheet-dir").attr("href", `https://docs.google.com/spreadsheets/d/${keys.id}/edit`);
+
+        rangeString = ``;
+        for (i = 0; i < keys.sheets.length; i ++) {
+            rangeString += `ranges=${keys.sheets[i]}!A2:T&`
+        }
+        console.log(rangeString);
         $.ajax({
-            url:`https://sheets.googleapis.com/v4/spreadsheets/${keys.id}/values/${keys.sheets[0]}!A2:T?majorDimension=ROWS&valueRenderOption=FORMATTED_VALUE&key=${keys.api}`,
+            url:`https://sheets.googleapis.com/v4/spreadsheets/${keys.id}/values:batchGet/?${rangeString}majorDimension=ROWS&valueRenderOption=FORMATTED_VALUE&key=${keys.api}`,
             method:"GET",
             dataType:"json"
         }).done(function(data){
             $("#loading-text").addClass("hidden");
-            var values = data.values;
+            var ranges = data.valueRanges;
             var keymap = [["scout", "firstName"], ["scout", "lastName"], ["scout", "email"], ["scout", "homePhone"], ["scout", "slack"], ["scout", "joinDate"], ["scout", "active"], ["scout", "wfaTrained"], ["scout", "school"], ["scout", "cellPhone"],
                             ["father", "firstName"], ["father", "lastName"], ["father", "cellPhone"], ["father", "email"], ["father", "slackUsername"],
                             ["mother", "firstName"], ["mother", "lastName"], ["mother", "cellPhone"], ["mother", "email"], ["mother", "slackUsername"]];
             var scouts = [];
-            var patrol = keys.sheets[0];
-            //loop through each cell of each row and populate it with the data
-            for (i = 0; i < values.length; i ++) {
-                var line = "<tr class='table-row'>";
+            for (i = 0; i < ranges.length; i ++) {
+                var values = ranges[i].values;
+                var patrol = keys.sheets[i];
+                //loop through each cell of each row and populate it with the data
+                for (j = 0; j < values.length; j ++) {
+                    var line = "<tr class='table-row'>";
 
-                //also populate the scouts object
-                scouts[i] = {
-                    scout:{},
-                    father:{},
-                    mother:{}
-                };
-                var cell = 0;
-                for (j = 0; j < values[i].length + 1; j ++) {//+1 for patrol
-                    
-                    if (j == 2) {//before the third iteration
-                        if (getColVisibility(j)) {
+                    //also populate the scouts object
+                    scouts[j] = {
+                        scout:{},
+                        father:{},
+                        mother:{}
+                    };
+                    var cell = 0;
+                    for (k = 0; k < values[j].length + 1; k ++) {//+1 for patrol
+                        
+                        if (k == 2) {//before the third iteration
+                            if (getColVisibility(k)) {
+                                hidden = "";
+                            } else {
+                                hidden = "hidden";
+                            }
+                            line += "<td class='col" + k + " " + hidden + "' data-col='" + k + "' data-row='" + k + "'>" + patrol + "</td>";
+                            scouts[j][keymap[cell][0]][keymap[cell][1]] = patrol;
+                            
+                            continue;
+                        }
+                        if (getColVisibility(k)) {
                             hidden = "";
                         } else {
                             hidden = "hidden";
                         }
-                        line += "<td class='col" + j + " " + hidden + "' data-col='" + j + "' data-row='" + i + "'>" + patrol + "</td>";
-                        scouts[i][keymap[cell][0]][keymap[cell][1]] = patrol;
                         
-                        continue;
+                        line += "<td class='col" + k + " " + hidden + "' data-col='" + k + "' data-row='" + k + "'>" + values[j][cell] + "</td>";
+                        
+                        scouts[j][keymap[cell][0]][keymap[cell][1]] = values[j][cell];
+                        cell ++;
                     }
-                    if (getColVisibility(j)) {
-                        hidden = "";
-                    } else {
-                        hidden = "hidden";
-                    }
+                    line += "</tr>";
                     
-                    line += "<td class='col" + j + " " + hidden + "' data-col='" + j + "' data-row='" + i + "'>" + values[i][cell] + "</td>";
-                    
-                    scouts[i][keymap[cell][0]][keymap[cell][1]] = values[i][cell];
-                    cell ++;
+                    $("#dir-body").append(line);
                 }
-                line += "</tr>";
-                
-                $("#dir-body").append(line);
             }
             $("#table").on("click", ".table-row", function (e) {
                 var id = $(e.target).attr("data-row");
@@ -382,10 +392,12 @@
                 valueNames: valueNames
             };
 
-            var list = new List('directory-list', options);
-
+            list = new List('directory-list', options);
+            //when search data is stored in a query string it is loaded before the list, therefore
+            //we must manually call search and sort again to only show the results of the search.
+            list.search($("#search").val());
+            list.sort("col" + $("#sortby-select").val(), { order: $("#sortorder-select").val() });
             $("#sortby-select, #sortorder-select").change(function() {
-                console.log($("#sortby-select").val());
                 list.sort("col" + $("#sortby-select").val(), { order: $("#sortorder-select").val() });
                 setURLQuery(setQuery("sortby", $("#sortby-select").val()));
                 setURLQuery(setQuery("sortorder", $("#sortorder-select").val()));
@@ -512,7 +524,7 @@
     }
     function processURLOptions() {
         var options = {
-            filter:getQuery("filter").split(",").map( str => parseInt(str, 10)),
+            filter:getQuery("filter") && getQuery("filter").length > 0 ? getQuery("filter").split(",").map( str => parseInt(str, 10)) : undefined,
             sortby:getQuery("sortby"),
             sortorder:getQuery("sortorder")
         }
@@ -525,30 +537,43 @@
     }
     function merge(defualt, newobj) {
         for (var key in newobj) {
-            if (newobj.hasOwnProperty(key)) defualt[key] = newobj[key];
+            if (newobj.hasOwnProperty(key) && newobj[key] !== null && newobj[key] !== undefined && newobj[key] != "") defualt[key] = newobj[key];
         }
         return defualt;
     }
-
+    $("#search").keyup(function() {
+        setURLQuery(setQuery("query", encodeURIComponent($("#search").val())));
+    });
     function setOptions(options) {
-        console.log(options.filter);
         for (i = 0; i <= 20; i ++) {
             
-            console.log(i + ":" + (options.filter.indexOf(i) > -1 ? "" : null));
             $("#filter-select option[value=" + i + "]").attr("selected", (options.filter.indexOf(i) > -1 ? "" : null));
         }
         $("#filter-select").selectpicker("refresh");
-
+        filterselectchange();
+        
         for (i = 0; i <= 20; i ++) {
             
             $("#sortby-select option[value=" + i + "]").attr("selected", (options.sortby == i ? "" : null));
         }
         $("#sortby-select").selectpicker("refresh");
-
+        $("#sortby-select").trigger("change");
         
         $("#sortorder-select option[value=" + options.sortorder + "]").attr("selected", "");
         $("#sortorder-select option[value=" + (options.sortorder == "asc" ? "desc" : "asc") + "]").attr("selected", null);
         $("#sortorder-select").selectpicker("refresh");
+        $("#sortorder-select").trigger("change");
+
+        if (list) {
+            //by defualt list is false and therefore this code will not run
+            //on the off chance that the list object is initiated before this code runs
+            //we must re-triggger the search to show only search results.
+            list.search($("#search").val());
+            list.sort("col" + $("#sortby-select").val(), { order: $("#sortorder-select").val() });
+        }
+
+        $("#search").val(getQuery("query"));
+        $("#search").trigger("keyup");
 
     }
     
