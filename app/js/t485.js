@@ -24,7 +24,7 @@ function getQuery(name) {
 
 //https://stackoverflow.com/a/10997390/5511561
 function setQuery(name, value) {
-    if (value === 0) value = "0";//0 is falsey
+    if (value !== null && value !== undefined ) value = "" + value;//we want falsey values to be used literally, as a string (e.g. 0 -> "0", false -> "false).
     let search = window.location.search;
     let regex = new RegExp("([?;&])" + name + "[^&;]*[;&]?");
     let query = search.replace(regex, "$1").replace(/&$/, '');
