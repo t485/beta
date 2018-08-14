@@ -179,6 +179,10 @@
 
 <script>
     var list = false;//false means uninitiated
+    var scoutArrayKeymap = [["scout", "firstName"], ["scout", "lastName"], ["scout", "email"], ["scout", "homePhone"], ["scout", "slack"], ["scout", "joinDate"], ["scout", "active"], ["scout", "WFATrained"], ["scout", "school"], ["scout", "cellPhone"],
+                            ["father", "firstName"], ["father", "lastName"], ["father", "cellPhone"], ["father", "email"], ["father", "slackUsername"],
+                            ["mother", "firstName"], ["mother", "lastName"], ["mother", "cellPhone"], ["mother", "email"], ["mother", "slackUsername"]];
+            
     firebase.database().ref("/directory/keys/").once("value").then(function(snapshot){
         var keys = snapshot.val();
         $(".link-google-sheet-dir").attr("href", `https://docs.google.com/spreadsheets/d/${keys.id}/edit`);
@@ -194,7 +198,7 @@
         }).done(function(data){
             $("#loading-text").addClass("hidden");
             var ranges = data.valueRanges;
-            var keymap = [["scout", "firstName"], ["scout", "lastName"], ["scout", "email"], ["scout", "homePhone"], ["scout", "slack"], ["scout", "joinDate"], ["scout", "active"], ["scout", "wfaTrained"], ["scout", "school"], ["scout", "cellPhone"],
+            var scoutArrayKeymap = [["scout", "firstName"], ["scout", "lastName"], ["scout", "email"], ["scout", "homePhone"], ["scout", "slack"], ["scout", "joinDate"], ["scout", "active"], ["scout", "WFATrained"], ["scout", "school"], ["scout", "cellPhone"],
                             ["father", "firstName"], ["father", "lastName"], ["father", "cellPhone"], ["father", "email"], ["father", "slackUsername"],
                             ["mother", "firstName"], ["mother", "lastName"], ["mother", "cellPhone"], ["mother", "email"], ["mother", "slackUsername"]];
             var scouts = [];
@@ -222,7 +226,7 @@
                                 hidden = "hidden";
                             }
                             line += "<td class='col" + k + " " + hidden + "' data-col='" + k + "' data-row='" + row + "'>" + patrol + "</td>";
-                            scouts[row][keymap[cell][0]][keymap[cell][1]] = patrol;
+                            scouts[row][scoutArrayKeymap[cell][0]][scoutArrayKeymap[cell][1]] = patrol;
                             
                             continue;
                         }
@@ -234,11 +238,12 @@
                         
                         line += "<td class='col" + k + " " + hidden + "' data-col='" + k + "' data-row='" + row + "'>" + values[j][cell] + "</td>";
                         
-                        scouts[row][keymap[cell][0]][keymap[cell][1]] = values[j][cell];
+                        scouts[row][scoutArrayKeymap[cell][0]][scoutArrayKeymap[cell][1]] = values[j][cell];
                         cell ++;
+                        
                     }
                     line += "</tr>";
-                    
+                    row ++;
                     $("#dir-body").append(line);
                 }
             }
@@ -250,8 +255,9 @@
             $(window).on("hashchange", function() {
                 onhashchange(scouts, keys);
             });
-            onhashchange(scouts, keys);
-
+            $(document).ready(function() {
+                onhashchange(scouts, keys);
+            });
             //init list.js
             var valueNames = [];
             for (i = 0; i < values[0].length + 1; i ++) {//+1 for the patrol row
@@ -275,13 +281,14 @@
         
     });
     
-    function getSlackLink(username, slackToken, callback) {
+    function getSlackLink(username, slackToken, callback, passthroughData) {
         firebase.database().ref("/directory/slackUID/").once("value").then(function(snapshot){
             var data = snapshot.val();
             var encodedUsername = encodeUsername(username);
+            
             if (data != null && data[encodedUsername] != null && data[encodedUsername] != undefined) {
                 //third parameter(boolean) is for debugging, it states whether the slack api was used.
-                callback(data[username], username, false);
+                callback(data[encodedUsername], username, false, passthroughData);
                 return;
             } else {
                 $.ajax({
@@ -304,7 +311,7 @@
                         
                         updates[encodeUsername(displayName)] = userlist[i].id;
                         if (displayName == username) {
-                            callback(userlist[i].id, username, true);
+                            callback(userlist[i].id, username, truea, passthroughData);
                         }
                     }
                     firebase.database().ref("/directory/slackUID/").update(updates);
@@ -333,21 +340,78 @@
         if (Number.isNaN(id) || id < 0 || id >= scouts.length) {
             return;
         }
-        
-        if (scouts[id].scout.slack == "" || scouts[id].scout.slack == undefined) {
-            $(".infoModal-scoutSlackDMLink").attr("href", null);
-            $(".infoModal-scoutSlackUsername").html("<i>None</i>");
-            $(".infoModal-scoutSlackDMLoadingText").text("");
-        } else {
-            $(".infoModal-scoutSlackUsername").text("@" + scouts[id].scout.slack);
-            $(".infoModal-scoutSlackDMLoadingText").text("(profile loading...)");
-            getSlackLink(scouts[id].scout.slack, keys.slackToken, function(id, username, slackApiCalled) {
-                $(".infoModal-scoutSlackDMLink").attr("href", "https://t485.slack.com/team/" + id);
-                $(".infoModal-scoutSlackDMLoadingText").text("");
-            });
-            
+
+        // get the slack usernames for the scout and their parents
+        var relationshipKeymap = ["scout", "father", "mother"];
+        for (i = 0; i < 3; i ++) {
+            console.log(".infoModal-" + relationshipKeymap[i] + "SlackDMLink")
+            console.log(scouts[id][relationshipKeymap[i]].slack);
+            if (scouts[id][relationshipKeymap[i]].slack == "" || scouts[id][relationshipKeymap[i]].slack == undefined) {
+                console.log(".infoModal-" + relationshipKeymap[i] + "SlackUsername");
+                $(".infoModal-" + relationshipKeymap[i] + "SlackDMLink").attr("href", null);
+                $(".infoModal-" + relationshipKeymap[i] + "SlackUsername").html("<i>Not listed in spreadsheet</i>");
+                $(".infoModal-" + relationshipKeymap[i] + "SlackDMLoadingText").text("");
+            } else if (scouts[id][relationshipKeymap[i]].slack.toLowerCase() == "none") {
+                console.log(".infoModal-" + relationshipKeymap[i] + "SlackUsername");
+                $(".infoModal-" + relationshipKeymap[i] + "SlackDMLink").attr("href", null);
+                $(".infoModal-" + relationshipKeymap[i] + "SlackUsername").html("<i>None</i>");
+                $(".infoModal-" + relationshipKeymap[i] + "SlackDMLoadingText").text("");
+            } else {
+                $(".infoModal-" + relationshipKeymap[i] + "SlackUsername").text("@" + scouts[id].scout.slack);
+                $(".infoModal-" + relationshipKeymap[i] + "SlackDMLoadingText").text("(profile loading...)");
+                getSlackLink(scouts[id][relationshipKeymap[i]].slack, keys.slackToken, function(id, username, slackApiCalled, i) {
+                    
+                    $(".infoModal-" + relationshipKeymap[i] + "SlackDMLink").attr("href", "https://t485.slack.com/messages/team/" + id);
+                    $(".infoModal-" + relationshipKeymap[i] + "SlackDMLoadingText").text("");
+                }, i);
+                
+            }
         }
-        $(".infoModal-scoutFullName").text(scouts[id].scout.firstName + " " + scouts[id].scout.lastName);
+        var traitText;
+        var notListedText = "Not listed in spreadsheet.";
+        
+        for (var trait = 0; trait < scoutArrayKeymap.length; trait ++) {
+
+            traitText = scouts[id][scoutArrayKeymap[trait][0]][scoutArrayKeymap[trait][1]];
+            console.log(traitText);
+            $(".infoModal-" + scoutArrayKeymap[trait][0] + 
+                scoutArrayKeymap[trait][1].substring(0,1).toUpperCase() + scoutArrayKeymap[trait][1].substring(1) + "Link")
+                .attr("href", null);//clear the link first
+            //for some traits, we add additional attributes(such as changing emails into email links) or change Y to Yes and N to No
+            if (traitText == undefined || traitText == "") {
+                traitText = notListedText;
+            } else if (scoutArrayKeymap[trait][1] == "active" || scoutArrayKeymap[trait][1] == "WFATrained") {
+                traitText = traitText == "Y" || traitText == "y" ? "Yes" : traitText == "N" || traitText == "n" ? "No" : traitText == "R" || traitText == "r" ? "Rarely" : traitText
+            } else if (scoutArrayKeymap[trait][1] == "email" || scoutArrayKeymap[trait][1] == "Email") {
+                 $(".infoModal-" + scoutArrayKeymap[trait][0] + 
+                scoutArrayKeymap[trait][1].substring(0,1).toUpperCase() + scoutArrayKeymap[trait][1].substring(1) + "Link")
+                .attr("href", "mailto:" + traitText);
+            } else if (scoutArrayKeymap[trait][1] == "cellPhone" || scoutArrayKeymap[trait][1] == "CellPhone" || 
+                scoutArrayKeymap[trait][1] == "homePhone" || scoutArrayKeymap[trait][1] == "HomePhone") {
+                 $(".infoModal-" + scoutArrayKeymap[trait][0] + 
+                scoutArrayKeymap[trait][1].substring(0,1).toUpperCase() + scoutArrayKeymap[trait][1].substring(1) + "Link")
+                .attr("href", (traitText.replace(/\D/g,"") == "" ? null : "tel:" + traitText.replace(/\D/g,"")));
+                console.log((traitText.replace(/\D/g,"") == "" ? null : "tel:" + traitText.replace(/\D/g,"")))
+                //remove all non-digit characters
+                //if it's not a phone number (e.g. "N/A" or "None"), don't link it or remove the characters.
+            }
+            //str for testing
+            var str = scoutArrayKeymap[trait][1];
+            console.log(".infoModal-" + scoutArrayKeymap[trait][0] + 
+                scoutArrayKeymap[trait][1].substring(0,1).toUpperCase() + scoutArrayKeymap[trait][1].substring(1))
+            $(".infoModal-" + scoutArrayKeymap[trait][0] + 
+                scoutArrayKeymap[trait][1].substring(0,1).toUpperCase() + scoutArrayKeymap[trait][1].substring(1))
+                .text(traitText);
+        }
+        for (i = 0; i < relationshipKeymap.length; i ++) {
+            if (scouts[id][relationshipKeymap[i]].firstName == undefined || scouts[id][relationshipKeymap[i]].firstName == "" || scouts[id][relationshipKeymap[i]].lastName == undefined || scouts[id][relationshipKeymap[i]].lastName == "") {
+                $(".infoModal-" + relationshipKeymap[i] + "FullNameElement").addClass("hidden");
+                $(".infoModal-" + relationshipKeymap[i] + "FirstNameElement").removeClass("hidden");
+                $(".infoModal-" + relationshipKeymap[i] + "LastNameElement").removeClass("hidden");
+            } else {
+                $(".infoModal-" + relationshipKeymap[i] + "FullName").text(scouts[id][relationshipKeymap[i]].firstName + " " + scouts[id][relationshipKeymap[i]].lastName);
+            }
+        }
         $("#infoModal").modal("show");
             
     }
@@ -446,13 +510,15 @@
             sortby:options.sortby == preset.sortby || options.sortby == "" || options.sortby == null,
             sortorder:options.sortorder == preset.sortorder || options.sortorder == "" || options.sortorder == null
         }
-        console.log(options.sortby);
-        console.log(JSON.parse(JSON.stringify(match)));
+        //console.log(options.sortby);
+        //console.log(JSON.parse(JSON.stringify(match)));
         if (match.filter && match.sortby && match.sortorder) {
-            console.log("hidden");
+            //console.log("hidden");
+            //remove search 
+            history.pushState("", document.title, window.location.pathname + window.location.hash);
             $("#modified-settings").addClass("hidden");
         } else {
-            console.log("not hidden");
+            //console.log("not hidden");
             $("#modified-settings").removeClass("hidden");
         }
     }
@@ -516,16 +582,42 @@
             </div>
             <div class="modal-body">
                 <ul class="list-group list-group-flush">
+                    
+                    
+                    <li class="list-group-item nfoModal-scoutFullNameElement"> <b>Scout's Name:</b> <span class="infoModal-scoutFullName"></span>	</li>
+                    <li class="list-group-item infoModal-scoutFirstNameElement hidden "> <b>Scout's First Name:</b> <span class="infoModal-scoutFirstName"></span>	</li>
+                    <li class="list-group-item infoModal-scoutLastNameElement hidden"> <b>Scout's Last Name:</b> <span class="infoModal-scoutLastName"></span>	</li>
+                    <li class="list-group-item"> <b>Scout's E-mail:</b>	<a class="infoModal-scoutEmail infoModal-scoutEmailLink"></a></li>
+                    <li class="list-group-item"> <b>Scout's Home Phone:</b>	<a class="infoModal-scoutHomePhone infoModal-scoutHomePhoneLink"></a></li>
                     <li class="list-group-item">
-                        <b>Slack:</b><a class="infoModal-scoutSlackDMLink" target="_blank"><span class="infoModal-scoutSlackUsername"></span><span class="infoModal-scoutSlackDMLoadingText"></span></a>
+                        <b>Scout's Slack:</b> <a class="infoModal-scoutSlackDMLink" target="_blank"><span class="infoModal-scoutSlackUsername"></span><span class="infoModal-scoutSlackDMLoadingText"></span></a>
                     </li>
-                    <li class="list-group-item">Dapibus ac facilisis in</li>
-                    <li class="list-group-item">Morbi leo risus</li>
-                    <li class="list-group-item">Porta ac consectetur ac</li>
-                    <li class="list-group-item">Vestibulum at eros</li>
+                    
+                    <li class="list-group-item"> <b>Scout's Cell Phone:</b> <a class="infoModal-scoutCellPhone infoModal-scoutCellPhoneLink"></a></li>
+                    <li class="list-group-item infoModal-fatherFullNameElement"> <b>Father's Name: </b><span class="infoModal-fatherFullName"></span></li>
+                    <li class="list-group-item infoModal-fatherFirstNameElement hidden"> <b>Father's First Name: </b><span class="infoModal-fatherFirstName"></span></li>
+                    <li class="list-group-item infoModal-fatherLastNameElement hidden"> <b>Father's Last Name: </b><span class="infoModal-fatherLastName"></span></li>
+                    <li class="list-group-item"> <b>Father's Cell Phone: </b><a class="infoModal-fatherCellPhone infoModal-fatherCellPhoneLink"></a></li>
+                    <li class="list-group-item"> <b>Father's E-mail:	</b><a class="infoModal-fatherEmail infoModal-fatherEmailLink"></a></li>
+                    <li class="list-group-item"> 
+                        <b>Father's Slack:	</b><a class="infoModal-fatherSlackDMLink" target="_blank"><span class="infoModal-fatherSlackUsername">loading</span><span class="infoModal-fatherSlackDMLoadingText">loading</span></a>
+                    </li>
+                    <li class="list-group-item infoModal-motherFullNameElement "> <b>Mother's Name:	</b><span class="infoModal-motherFullName"></span></li>
+                    <li class="list-group-item infoModal-motherFirstNameElement hidden "> <b>Mother's First Name:	</b><span class="infoModal-motherFirstName"></span></li>
+                    <li class="list-group-item infoModal-motherLastNameElement hidden"> <b>Mother's Last Name:	</b><span class="infoModal-motherLastName"></span></li>
+                    <li class="list-group-item"> <b>Mother's Cell Phone:	</b><a class="infoModal-motherCellPhone infoModal-motherCellPhoneLink"></a></li>
+                    <li class="list-group-item"> <b>Mother's E-mail:	</b><a class="infoModal-motherEmail infoModal-motherEmailLink"></a></li>
+                    <li class="list-group-item"> 
+                        <b>Mother's Slack:	</b><a class="infoModal-motherSlackDMLink" target="_blank"><span class="infoModal-motherSlackUsername"></span><span class="infoModal-motherSlackDMLoadingText"></span></a>
+                    </li>
+                    <li class="list-group-item"> <b>Date Joined Troop 485:	</b><span class="infoModal-scoutJoinDate"></span></li>
+                    <li class="list-group-item"> <b>Active:	</b><span class="infoModal-scoutActive"></span></li>
+                    <li class="list-group-item"> <b>Wilderness First Aid Trained:	</b><span class="infoModal-scoutWFATrained"></span></li>
+                    <li class="list-group-item"> <b>School Attending:	</b><span class="infoModal-scoutSchool"></span></li>
                 </ul>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Edit in spreadsheet</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
