@@ -47,7 +47,7 @@
             </h2>
             <div id="directory-list">
                 <b>Search:</b>
-                <input type="text" class="form-control fuzzy-search" id="search" placeholder="Search by name, phone number, slack username, etc.">
+                <input type="text" class="form-control fuzzy-search" id="search" placeholder="Search by name, job, phone number, slack username, etc.">
                 <form class="pt-1">
                     <div class="row">
                         <div class="col">
@@ -60,25 +60,26 @@
                                     <option value="3">Scout's E-mail</option>
                                     <option value="4">Scout's Home Phone</option>
                                     <option value="5">Slack Username</option>
-                                    <option value="6">Date Joined Troop 485</option>
-                                    <option value="7">Active</option>
-                                    <option value="8">Wilderness First Aid Trained</option>
-                                    <option value="9">School Attending</option>
-                                    <option value="10">Scout's Cell Phone</option>
+                                    <option value="6" >Troop Job</option>
+                                    <option value="7">Date Joined Troop 485</option>
+                                    <option value="8">Active</option>
+                                    <option value="9">Wilderness First Aid Trained</option>
+                                    <option value="10">School Attending</option>
+                                    <option value="11">Scout's Cell Phone</option>
                                 </optgroup>
                                 <optgroup label="Father">
-                                    <option value="11">Father's First Name</option>
-                                    <option value="12">Father's Last Name</option>
-                                    <option value="13">Father's Cell Phone</option>
-                                    <option value="14">Father's E-mail</option>
-                                    <option value="15">Father's Slack Username</option>
+                                    <option value="12">Father's First Name</option>
+                                    <option value="13">Father's Last Name</option>
+                                    <option value="14">Father's Cell Phone</option>
+                                    <option value="15">Father's E-mail</option>
+                                    <option value="16">Father's Slack Username</option>
                                 </optgroup>
                                 <optgroup label="Mother">
-                                    <option value="16">Mother's First Name</option>
-                                    <option value="17">Mother's Last Name</option>
-                                    <option value="18">Mother's Cell Phone</option>
-                                    <option value="19">Mother's E-mail</option>
-                                    <option value="20">Mother's Slack Username</option>
+                                    <option value="17">Mother's First Name</option>
+                                    <option value="18">Mother's Last Name</option>
+                                    <option value="19">Mother's Cell Phone</option>
+                                    <option value="20">Mother's E-mail</option>
+                                    <option value="21">Mother's Slack Username</option>
                                 </optgroup>
                             </select>
                         </div>
@@ -99,25 +100,26 @@
                                     <option value="3" selected>Scout's E-mail</option>
                                     <option value="4" selected>Scout's Home Phone</option>
                                     <option value="5" >Slack Username</option>
-                                    <option value="6">Date Joined Troop 485</option>
-                                    <option value="7">Active</option>
-                                    <option value="8">Wilderness First Aid Trained</option>
-                                    <option value="9">School Attending</option>
-                                    <option value="10" selected>Scout's Cell Phone</option>
+                                    <option value="6" >Troop Job</option>
+                                    <option value="7">Date Joined Troop 485</option>
+                                    <option value="8">Active</option>
+                                    <option value="9">Wilderness First Aid Trained</option>
+                                    <option value="10">School Attending</option>
+                                    <option value="11" selected>Scout's Cell Phone</option>
                                 </optgroup>
                                 <optgroup label="Father">
-                                    <option value="11">Father's First Name</option>
-                                    <option value="12">Father's Last Name</option>
-                                    <option value="13">Father's Cell Phone</option>
-                                    <option value="14">Father's E-mail</option>
-                                    <option value="15">Father's Slack Username</option>
+                                    <option value="12">Father's First Name</option>
+                                    <option value="13">Father's Last Name</option>
+                                    <option value="14">Father's Cell Phone</option>
+                                    <option value="15">Father's E-mail</option>
+                                    <option value="16">Father's Slack Username</option>
                                 </optgroup>
                                 <optgroup label="Mother">
-                                    <option value="16">Mother's First Name</option>
-                                    <option value="17">Mother's Last Name</option>
-                                    <option value="18">Mother's Cell Phone</option>
-                                    <option value="19">Mother's E-mail</option>
-                                    <option value="20">Mother's Slack Username</option>
+                                    <option value="17">Mother's First Name</option>
+                                    <option value="18">Mother's Last Name</option>
+                                    <option value="19">Mother's Cell Phone</option>
+                                    <option value="20">Mother's E-mail</option>
+                                    <option value="21">Mother's Slack Username</option>
                                 </optgroup>
                             </select>
                             
@@ -143,21 +145,22 @@
                             <th scope="col" class="col3" data-col="3">Scout's E-mail:</th>
                             <th scope="col" class="col4" data-col="4">Scout's Home Phone</th>
                             <th scope="col" class="col5" data-col="5">Slack Username</th>
-                            <th scope="col" class="col6" data-col="6">Date Joined Troop 485</th>
-                            <th scope="col" class="col7" data-col="7">Active (Y)es/ (R)arely/ (N)o</th>
-                            <th scope="col" class="col8" data-col="8">Wilderness First Aid Trained</th>
-                            <th scope="col" class="col9" data-col="9">School Attending</th>
-                            <th scope="col" class="col10" data-col="10">Scout's Cell Phone</th>
-                            <th scope="col" class="col11" data-col="11">Father's First Name</th>
-                            <th scope="col" class="col12" data-col="12">Father's Last Name</th>
-                            <th scope="col" class="col13" data-col="13">Father's Cell Phone</th>
-                            <th scope="col" class="col14" data-col="14">Father's E-mail</th>
-                            <th scope="col" class="col15" data-col="15">Father's Slack Username or None</th>
-                            <th scope="col" class="col16" data-col="16">Mother's First Name</th>
-                            <th scope="col" class="col17" data-col="17">Mother's Last Name</th>
-                            <th scope="col" class="col18" data-col="18">Mother's Cell Phone</th>
-                            <th scope="col" class="col19" data-col="19">Mother's E-mail</th>
-                            <th scope="col" class="col20" data-col="20">Mother's Slack Username or None</th>
+                            <th scope="col" class="col6" data-col="6">Troop Job</th>
+                            <th scope="col" class="col6" data-col="7">Date Joined Troop 485</th>
+                            <th scope="col" class="col7" data-col="8">Active (Y)es/ (R)arely/ (N)o</th>
+                            <th scope="col" class="col8" data-col="9">Wilderness First Aid Trained</th>
+                            <th scope="col" class="col9" data-col="10">School Attending</th>
+                            <th scope="col" class="col10" data-col="11">Scout's Cell Phone</th>
+                            <th scope="col" class="col11" data-col="12">Father's First Name</th>
+                            <th scope="col" class="col12" data-col="13">Father's Last Name</th>
+                            <th scope="col" class="col13" data-col="14">Father's Cell Phone</th>
+                            <th scope="col" class="col14" data-col="15">Father's E-mail</th>
+                            <th scope="col" class="col15" data-col="16">Father's Slack Username or None</th>
+                            <th scope="col" class="col16" data-col="17">Mother's First Name</th>
+                            <th scope="col" class="col17" data-col="18">Mother's Last Name</th>
+                            <th scope="col" class="col18" data-col="19">Mother's Cell Phone</th>
+                            <th scope="col" class="col19" data-col="20">Mother's E-mail</th>
+                            <th scope="col" class="col20" data-col="21">Mother's Slack Username or None</th>
                             </tr>
                         </thead>
                         <tbody id="dir-body" class="list">
@@ -180,8 +183,8 @@
 <script>
     var list = false;//false means uninitiated
     var scoutArrayKeymap = [["scout", "firstName"], ["scout", "lastName"], ["scout", "email"], ["scout", "homePhone"], ["scout", "slack"], ["scout", "joinDate"], ["scout", "active"], ["scout", "WFATrained"], ["scout", "school"], ["scout", "cellPhone"],
-                            ["father", "firstName"], ["father", "lastName"], ["father", "cellPhone"], ["father", "email"], ["father", "slackUsername"],
-                            ["mother", "firstName"], ["mother", "lastName"], ["mother", "cellPhone"], ["mother", "email"], ["mother", "slackUsername"]];
+                            ["father", "firstName"], ["father", "lastName"], ["father", "cellPhone"], ["father", "email"], ["father", "slack"],
+                            ["mother", "firstName"], ["mother", "lastName"], ["mother", "cellPhone"], ["mother", "email"], ["mother", "slack"]];
             
     firebase.database().ref("/directory/keys/").once("value").then(function(snapshot){
         var keys = snapshot.val();
@@ -189,7 +192,7 @@
 
         rangeString = ``;
         for (i = 0; i < keys.sheets.length; i ++) {
-            rangeString += `ranges=${keys.sheets[i]}!A2:T&`
+            rangeString += `ranges=${keys.sheets[i]}!A2:U&`
         }
         $.ajax({
             url:`https://sheets.googleapis.com/v4/spreadsheets/${keys.id}/values:batchGet/?${rangeString}majorDimension=ROWS&valueRenderOption=FORMATTED_VALUE&key=${keys.api}`,
@@ -198,9 +201,9 @@
         }).done(function(data){
             $("#loading-text").addClass("hidden");
             var ranges = data.valueRanges;
-            var scoutArrayKeymap = [["scout", "firstName"], ["scout", "lastName"], ["scout", "email"], ["scout", "homePhone"], ["scout", "slack"], ["scout", "joinDate"], ["scout", "active"], ["scout", "WFATrained"], ["scout", "school"], ["scout", "cellPhone"],
-                            ["father", "firstName"], ["father", "lastName"], ["father", "cellPhone"], ["father", "email"], ["father", "slackUsername"],
-                            ["mother", "firstName"], ["mother", "lastName"], ["mother", "cellPhone"], ["mother", "email"], ["mother", "slackUsername"]];
+            var scoutArrayKeymap = [["scout", "firstName"], ["scout", "lastName"], ["scout", "email"], ["scout", "homePhone"], ["scout", "slack"], ["scout", "job"], ["scout", "joinDate"], ["scout", "active"], ["scout", "WFATrained"], ["scout", "school"], ["scout", "cellPhone"],
+                            ["father", "firstName"], ["father", "lastName"], ["father", "cellPhone"], ["father", "email"], ["father", "slack"],
+                            ["mother", "firstName"], ["mother", "lastName"], ["mother", "cellPhone"], ["mother", "email"], ["mother", "slack"]];
             var scouts = [];
             var row = 0;
             for (i = 0; i < ranges.length; i ++) {
@@ -246,6 +249,7 @@
                     row ++;
                     $("#dir-body").append(line);
                 }
+                console.log(scouts);
             }
             $("#table").on("click", ".table-row", function (e) {
                 var id = $(e.target).attr("data-row");
@@ -344,24 +348,31 @@
         // get the slack usernames for the scout and their parents
         var relationshipKeymap = ["scout", "father", "mother"];
         for (i = 0; i < 3; i ++) {
+            console.log(i);
             console.log(".infoModal-" + relationshipKeymap[i] + "SlackDMLink")
             console.log(scouts[id][relationshipKeymap[i]].slack);
+            console.log(JSON.parse(JSON.stringify(scouts[id][relationshipKeymap[i]])));
             if (scouts[id][relationshipKeymap[i]].slack == "" || scouts[id][relationshipKeymap[i]].slack == undefined) {
+                console.log("HA107UNDEF" + relationshipKeymap[i]);
                 console.log(".infoModal-" + relationshipKeymap[i] + "SlackUsername");
                 $(".infoModal-" + relationshipKeymap[i] + "SlackDMLink").attr("href", null);
                 $(".infoModal-" + relationshipKeymap[i] + "SlackUsername").html("<i>Not listed in spreadsheet</i>");
                 $(".infoModal-" + relationshipKeymap[i] + "SlackDMLoadingText").text("");
             } else if (scouts[id][relationshipKeymap[i]].slack.toLowerCase() == "none") {
                 console.log(".infoModal-" + relationshipKeymap[i] + "SlackUsername");
+                console.log("HA107NONE" + relationshipKeymap[i]);
                 $(".infoModal-" + relationshipKeymap[i] + "SlackDMLink").attr("href", null);
                 $(".infoModal-" + relationshipKeymap[i] + "SlackUsername").html("<i>None</i>");
                 $(".infoModal-" + relationshipKeymap[i] + "SlackDMLoadingText").text("");
             } else {
-                $(".infoModal-" + relationshipKeymap[i] + "SlackUsername").text("@" + scouts[id].scout.slack);
+                console.log("HA107" + relationshipKeymap[i]);
+                $(".infoModal-" + relationshipKeymap[i] + "SlackUsername").text("@" + scouts[id][relationshipKeymap[i]].slack);
                 $(".infoModal-" + relationshipKeymap[i] + "SlackDMLoadingText").text("(profile loading...)");
                 getSlackLink(scouts[id][relationshipKeymap[i]].slack, keys.slackToken, function(id, username, slackApiCalled, i) {
-                    
-                    $(".infoModal-" + relationshipKeymap[i] + "SlackDMLink").attr("href", "https://t485.slack.com/messages/team/" + id);
+                    console.log(id);
+                    console.log(".infoModal-" + relationshipKeymap[i] + "SlackDMLink");
+                    //NOTE: the /message/ in the slack link could be relaced with anything and still work. without /messages/message, it would open in the app.
+                    $(".infoModal-" + relationshipKeymap[i] + "SlackDMLink").attr("href", "https://t485.slack.com/messages/message/team/" + id);
                     $(".infoModal-" + relationshipKeymap[i] + "SlackDMLoadingText").text("");
                 }, i);
                 
@@ -373,7 +384,9 @@
         for (var trait = 0; trait < scoutArrayKeymap.length; trait ++) {
 
             traitText = scouts[id][scoutArrayKeymap[trait][0]][scoutArrayKeymap[trait][1]];
+            console.log("TraitText:")
             console.log(traitText);
+            console.log(scoutArrayKeymap[trait][1]);
             $(".infoModal-" + scoutArrayKeymap[trait][0] + 
                 scoutArrayKeymap[trait][1].substring(0,1).toUpperCase() + scoutArrayKeymap[trait][1].substring(1) + "Link")
                 .attr("href", null);//clear the link first
@@ -508,15 +521,18 @@
         var match = {//easier to do logic here in ternary operator than in one if statement
             filter:options.filter == preset.filter || options.filter == "" || options.filter == null,
             sortby:options.sortby == preset.sortby || options.sortby == "" || options.sortby == null,
-            sortorder:options.sortorder == preset.sortorder || options.sortorder == "" || options.sortorder == null
+            sortorder:options.sortorder == preset.sortorder || options.sortorder == "" || options.sortorder == null,
+            search: $("#search").val() == "" || $("#search").val() == null
         }
         //console.log(options.sortby);
         //console.log(JSON.parse(JSON.stringify(match)));
-        if (match.filter && match.sortby && match.sortorder) {
+        if (match.filter && match.sortby && match.sortorder && match.search) {
             //console.log("hidden");
             //remove search 
             history.pushState("", document.title, window.location.pathname + window.location.hash);
+            
             $("#modified-settings").addClass("hidden");
+            
         } else {
             //console.log("not hidden");
             $("#modified-settings").removeClass("hidden");
@@ -558,7 +574,7 @@
             list.search($("#search").val());
             list.sort("col" + $("#sortby-select").val(), { order: $("#sortorder-select").val() });
         }
-
+        console.log("setOptions");
         $("#search").val(getQuery("query"));
         $("#search").trigger("keyup");
 
