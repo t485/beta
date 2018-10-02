@@ -60,3 +60,18 @@ function escapeRegExp(str) {
 
 ga('create', 'UA-102375833-1', 'auto');
 ga('send', 'pageview');
+
+
+
+// show fixed navbar once user scrolls past regular navbar
+$(function () {
+    $(window).scroll(function () {
+        console.log($(this).scrollTop());
+        // set distance user needs to scroll before we fadeIn navbar
+        if ($(this).scrollTop() > 150) {
+            $('.navbar').addClass('sticky-top');
+        } else {
+            $('.navbar').removeClass('sticky-top');
+        }
+    });
+});
