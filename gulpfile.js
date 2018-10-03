@@ -98,8 +98,24 @@ gulp.task('libraries', function () {
             "./node_modules/bootstrap-select/dist/js/bootstrap-select.min.js",
             "./node_modules/list.js/dist/list.min.js"
 
+
         ])
         .pipe(gulp.dest('./docs/js/'));
+    var unminifiedscripts = gulp.src([
+        "./node_modules/flatpickr/dist/flatpickr.js",
+
+
+    ])
+        .pipe(plumber())
+        .pipe(uglify())
+        .pipe(gulp.dest('./docs/js/'));
+    var unminifiedstyles = gulp.src([
+        "./node_modules/flatpickr/dist/flatpickr.css",
+
+    ])
+        .pipe(plumber())
+        .pipe(cssnano())
+        .pipe(gulp.dest('./docs/css/'));
     var styles = gulp.src([
             './node_modules/bootstrap/dist/css/bootstrap.min.css',
             './node_modules/bootstrap/dist/css/bootstrap.min.css.map',
@@ -109,7 +125,7 @@ gulp.task('libraries', function () {
         .pipe(gulp.dest('./docs/css/'));
 
 
-    return merge(scripts, styles);
+    return merge(scripts, unminifiedscripts, unminifiedstyles, styles);
 });
 gulp.task("build", gulp.series("clean:docs",
     gulp.parallel("styles", "html", "assets", "scripts", "libraries")
