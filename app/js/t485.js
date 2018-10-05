@@ -38,7 +38,7 @@ String.prototype.replaceAll = function(search, replacement) {
     return target.replace(new RegExp(escapeRegExp(search), 'g'), replacement);
 };
 
-//http://stackoverflow.com/a/17606289/5511561s (footnote), 
+//http://stackoverflow.com/a/17606289/5511561s (footnote),
 
 function escapeRegExp(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
@@ -66,7 +66,6 @@ ga('send', 'pageview');
 // show fixed navbar once user scrolls past regular navbar
 $(function () {
     $(window).scroll(function () {
-        console.log($(this).scrollTop());
         // set distance user needs to scroll before we fadeIn navbar
         if ($(this).scrollTop() > 150) {
             $('.navbar').addClass('sticky-top');
