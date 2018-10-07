@@ -34,7 +34,10 @@
 		"popper.js": "^1.14.4"
 	},
 	"dependencies": {
+		"bootstrap-3-typeahead": "^4.0.2",
 		"bootstrap-select": "^1.13.2",
-		"list.js": "^1.5.0"
+		"flatpickr": "^4.5.2",
+		"list.js": "^1.5.0",
+		"taggle": "^1.14.0"
 	}
 }

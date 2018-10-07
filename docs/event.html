@@ -3,19 +3,18 @@
 <html lang="en">
 
 <head>
-	{% block coreMeta %}
+	
 		<meta charset="utf-8">
 		<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-		<meta content="{% if description %} {{description}} {% else %} The official Boy Scout Troop 485 website. {% endif %}" name="description">
-	{% endblock %}
-	{% block meta %} {% endblock %}
-	{% block title %}
-		{% block titletag -%}
-			<title>Troop 485{%- if title %} - {% elif title == "" -%}{#If title is empty dont display dash, even if page is present#}{%- elif page %} - {% elif page == "" %} - {% endif -%}{%- if title -%}{{-title-}}{%- elif title == "" -%}{{-title-}}{% else -%}{{-page}}{%endif%}</title>
-		{% endblock %}
-	{% endblock %}
+		<meta content=" The official Boy Scout Troop 485 website. " name="description">
+	
+	 
+	
+		<title>Troop 485 - Template</title>
+		
+	
 
-	{% block coreStyles %}
+	
 		<!-- Bootstrap core CSS -->
 		<link href="/css/bootstrap.min.css" rel="stylesheet">
 		<!-- Custom fonts for this template -->
@@ -25,16 +24,29 @@
 		<!-- Custom styles for this template -->
 		<link href="/css/theme.css" rel="stylesheet">
 		<link href="/css/t485.css" rel="stylesheet">
-	{% endblock %}
-	{% block favicons %}
+	
+	
 		<!-- Favicons -->
 		<link rel="apple-touch-icon" sizes="152x152" href="/favicons/apple-touch-icon-152x152.png">
 		<link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon-180x180.png">
 		<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
-	{% endblock %}
-	{% block styles %}{% endblock %}
-	{% block head_scripts %}{% endblock %}
-	{% block firebaseErrorCheck %}
+	
+	
+	
+<script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=1xgvcz8vbo0d8ph1az3aqt4l0ygp01yy831faeohcg0n0rc5"></script>
+<script>
+    tinymce.init({
+        selector: '#content',
+        inline:true,
+        browser_spellcheck: true,
+        plugins: 'code',
+        theme: 'modern',
+        plugins: ["advlist autolink lists link image charmap print preview", "searchreplace visualblocks fullscreen textcolor colorpicker", "insertdatetime media table contextmenu paste imagetools"],
+        toolbar: "insertfile undo redo | styleselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | save"
+    });
+</script>
+
+	
 		<script>
 			try {
 				localStorage.setItem('firebaseErrorTest', 'test');
@@ -44,30 +56,30 @@
 				if (e.message === 'The quota has been exceeded.') {
 					// using Safari(desktop & iOS) or Chrome(iOS) w/ private, localStorage not supported
 					// firebase will throw error, so better to alert user now
-					alert("Private browsing is not supported on Safari or the Chrome IOS app. " +
+					alert("Private browsing is not supported on Safari or the Chrome IOS app. " + 
 					"Turn off private browsing or use a supported private browsing app.");
 				}
 				throw 'notEnoughLocalStorage';
 			}
 		</script>
-	{% endblock %}
+	
 </head>
 
 <body>
-	{% block header %}
+	
 		<div class="text-center">
 			<a href="/">
 				<img src="/img/header.png" alt="Boy Scout Troop 485" id="header">
 			</a>
 		</div>
-	{% endblock %}
-	{% block alertBox %}
-		{# note: when adding custom alerts to a page via template, call super() first instead of retyping the alertbox div #}
+	
+	
+		
 
 		<div id="alertBox">
 		</div>
-	{% endblock %}
-	{% block navbar %}
+	
+	
 		<!-- Navigation -->
 
 
@@ -81,8 +93,8 @@
 
 				<div class="collapse navbar-collapse" id="navbarResponsive">
 					<ul class="navbar-nav mx-auto">
-
-
+					
+						
 						<li class="nav-item px-lg-4">
 							<a class="nav-link text-uppercase text-expanded" href="/">Home</a>
 						</li>
@@ -95,9 +107,6 @@
 						</li>
 						<li class="nav-item px-lg-4">
 							<a class="nav-link text-uppercase text-expanded" href="/event-pages.html">Event Pages</a>
-						</li>
-						<li class="nav-item px-lg-4">
-							<a class="nav-link text-uppercase text-expanded" href="/pictures.html">Pictures</a>
 						</li>
 
 
@@ -114,35 +123,34 @@
 				</div>
 			</div>
 		</nav>
-	{% endblock %}
-	{% block mainOuter %}
+	
+	
 
 		<div class="container">
-			{% block main %}
+			
+<div class="row">
+    <div class="box">
+        <div class="col-lg-12">
+            <h2 class="primary-heading">
+                Tinymce Test
+            </h2>
+            <div id="content">This page is not done yet! We apologize for any inconvenience this may cause.</div>
+        </div>
+    </div>
+</div>
 
-				<div class="row">
-					<div class="box">
-						<div class="col-lg-12">
-							<h2 class="primary-heading">Work in Progress</h2>
-
-
-							<p>This page is not done yet! We apologize for any inconvenience this may cause.<br>Code BASE_404</p>
-						</div>
-					</div>
-				</div>
-			{%endblock %}
 		</div>
-	{% endblock %}
-	{% block footer %}
+	
+	
 
 		<footer class="footer text-faded text-center py-5">
 			<div class="container">
 				<p class="m-0 small">Copyright &copy; 2006-2018 Troop 485, Silicon Valley Monterey Bay Council, Boy Scouts of America.</p>
 			</div>
 		</footer>
-	{% endblock %}
-
-	{% block firebase %}
+	
+	
+	
 		<script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-app.js">
 		</script>
 		<script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-auth.js">
@@ -167,8 +175,8 @@
 			};
 			firebase.initializeApp(config);
 		</script>
-	{% endblock %}
-	{% block coreScripts %}
+	
+	
 		<!-- Bootstrap core JavaScript -->
 
 		<script src="/js/jquery.min.js">
@@ -179,7 +187,9 @@
 		</script>
 		<script src="/js/t485.js">
 		</script>
-	{% endblock %}
-	{% block scripts %} {% endblock %}
-	{% block modals %} {% endblock %}
+	
+	
+
+
+	 
 </body>

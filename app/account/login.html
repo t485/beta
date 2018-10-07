@@ -1,5 +1,5 @@
 {% set page = "Login" %}
-{% extends "base.html" %} 
+{% extends "base.html" %}
 
 {% block main %}
 
@@ -7,13 +7,20 @@
     <div class="box w-100">
         <div class="col-lg-12">
             <h2 class="primary-heading">Login</h2>
-			
+
 
             <div>
-                
-                <button class="btn btn-primary btn-block" id="login">Login via Google</button>
+                <div class="form-group">
+                    <label for="email">Email address:</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter your email...">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter your password...">
+                </div>
+                <button class="btn btn-primary btn-block" id="login">Login</button>
 				<p class="text-danger" id="error"></p>
-                <p id="account-tray" class="text-center"><a href="/account/create.html">Create an account</a> | <a href="/account/forgotpassword.html">Forgot password</a></p>
+                <p id="account-tray" class="text-center"><a href="/account/create.html" id="create-link">Create an account</a> | <a href="/account/forgotpassword.html" id="forgot-password-link">Forgot password</a></p>
             </div>
         </div>
     </div>
@@ -23,7 +30,10 @@
 
 {% block scripts %}
 <script>
-
+    if (getQuery("continue") != "" && getQuery("continue") != null) {
+        $("#create-link").attr("href", "/account/create.html?continue=" + getQuery("continue"));
+        $("#forgot-password-link").attr("href", "/account/forgotpassword.html?continue=" + getQuery("continue"));
+    }
 	firebase.auth().onAuthStateChanged(function(user) {
 		if (user) {
 			$("#error").html("");
@@ -40,9 +50,9 @@ $("#login").click(function() {
 	$("#error").html("");
     firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
 		$("#error").html("Error: Email/Password incorrect.");
-		console.log(3);
+
     })
-	
+
 });
 </script>
 {% endblock %}
