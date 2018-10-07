@@ -144,6 +144,7 @@ p {
     //my-5
     margin-top: 3rem !important;
     margin-bottom: 3rem !important;
+    width: 100%;
 }
 
 .footer {
@@ -162,3 +163,21 @@ p {
     font-weight: 100 !important;
 }
 
+
+a {
+    cursor: pointer;
+}
+
+
+@media screen and (min-width: 768px) {
+    .img-left {
+        float: left;
+        margin-right: 25px;
+    }
+}
+
+
+iframe {
+    width: 100%;
+    height: 600px;
+}
