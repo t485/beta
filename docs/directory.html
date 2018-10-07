@@ -13,6 +13,7 @@
 		<title>Troop 485 - Directory</title>
 		
 	
+
 	
 		<!-- Bootstrap core CSS -->
 		<link href="/css/bootstrap.min.css" rel="stylesheet">
@@ -69,6 +70,7 @@
 </style>
 
 	
+	
 		<script>
 			try {
 				localStorage.setItem('firebaseErrorTest', 'test');
@@ -78,7 +80,7 @@
 				if (e.message === 'The quota has been exceeded.') {
 					// using Safari(desktop & iOS) or Chrome(iOS) w/ private, localStorage not supported
 					// firebase will throw error, so better to alert user now
-					alert("Private browsing is not supported on Safari or the Chrome IOS app. " + 
+					alert("Private browsing is not supported on Safari or the Chrome IOS app. " +
 					"Turn off private browsing or use a supported private browsing app.");
 				}
 				throw 'notEnoughLocalStorage';
@@ -115,8 +117,8 @@
 
 				<div class="collapse navbar-collapse" id="navbarResponsive">
 					<ul class="navbar-nav mx-auto">
-					
-						
+
+
 						<li class="nav-item px-lg-4">
 							<a class="nav-link text-uppercase text-expanded" href="/">Home</a>
 						</li>
@@ -129,6 +131,9 @@
 						</li>
 						<li class="nav-item px-lg-4">
 							<a class="nav-link text-uppercase text-expanded" href="/event-pages.html">Event Pages</a>
+						</li>
+						<li class="nav-item px-lg-4">
+							<a class="nav-link text-uppercase text-expanded" href="/pictures.html">Pictures</a>
 						</li>
 
 
@@ -295,19 +300,19 @@
 			</div>
 		</footer>
 	
+
 	
-	
-		<script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-app.js">
+		<script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-app.js">
 		</script>
-		<script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-auth.js">
+		<script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-auth.js">
 		</script>
-		<script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-database.js">
+		<script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-database.js">
 		</script>
-		<script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-storage.js">
+		<script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-storage.js">
 		</script>
-		<!-- <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-firestore.js"></script> -->
-		<!-- <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-messaging.js"></script> -->
-		<!-- <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-functions.js"></script> -->
+		<!-- <script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-firestore.js"></script> -->
+		<!-- <script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-messaging.js"></script> -->
+		<!-- <script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-functions.js"></script> -->
 
 		<script>
 			// Initialize Firebase
