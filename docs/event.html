@@ -56,7 +56,7 @@
 				if (e.message === 'The quota has been exceeded.') {
 					// using Safari(desktop & iOS) or Chrome(iOS) w/ private, localStorage not supported
 					// firebase will throw error, so better to alert user now
-					alert("Private browsing is not supported on Safari or the Chrome IOS app. " + 
+					alert("Private browsing is not supported on Safari or the Chrome IOS app. " +
 					"Turn off private browsing or use a supported private browsing app.");
 				}
 				throw 'notEnoughLocalStorage';
@@ -93,8 +93,8 @@
 
 				<div class="collapse navbar-collapse" id="navbarResponsive">
 					<ul class="navbar-nav mx-auto">
-					
-						
+
+
 						<li class="nav-item px-lg-4">
 							<a class="nav-link text-uppercase text-expanded" href="/">Home</a>
 						</li>
@@ -108,15 +108,28 @@
 						<li class="nav-item px-lg-4">
 							<a class="nav-link text-uppercase text-expanded" href="/event-pages.html">Event Pages</a>
 						</li>
+						<li class="nav-item px-lg-4">
+							<a class="nav-link text-uppercase text-expanded" href="/pictures.html">Pictures</a>
+						</li>
 
 
-						<li class="nav-item dropdown">
+						<li class="nav-item dropdown px-lg-4">
 							<a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle text-uppercase text-expanded" data-toggle="dropdown"
 								href="#" id="account-dropdown" role="button">Account</a>
 
 							<div aria-labelledby="account-dropdown" class="dropdown-menu">
 								<h6 class="dropdown-header">You are not logged in.</h6>
 								<a class="dropdown-item" href="/account/login.html">Login</a>
+							</div>
+						</li>
+
+						<li class="nav-item dropdown px-lg-4">
+							<a class="nav-link dropdown-toggle text-uppercase text-expanded" data-toggle="dropdown" href="#" role="button">About</a>
+
+							<div class="dropdown-menu">
+								<a class="dropdown-item" href="/about/faq.html">FAQ</a>
+								<a class="dropdown-item" href="/about/merit-badges.html">Merit Badges</a>
+								<a class="dropdown-item" href="/about/path-to-eagle.html">Path to Eagle</a>
 							</div>
 						</li>
 					</ul>
@@ -149,7 +162,7 @@
 			</div>
 		</footer>
 	
-	
+
 	
 		<script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-app.js">
 		</script>
