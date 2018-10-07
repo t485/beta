@@ -14,6 +14,7 @@
 			<title>Troop 485{%- if title %} - {% elif title == "" -%}{#If title is empty dont display dash, even if page is present#}{%- elif page %} - {% elif page == "" %} - {% endif -%}{%- if title -%}{{-title-}}{%- elif title == "" -%}{{-title-}}{% else -%}{{-page}}{%endif%}</title>
 		{% endblock %}
 	{% endblock %}
+
 	{% block coreStyles %}
 		<!-- Bootstrap core CSS -->
 		<link href="/css/bootstrap.min.css" rel="stylesheet">
@@ -32,6 +33,7 @@
 		<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
 	{% endblock %}
 	{% block styles %}{% endblock %}
+	{% block head_scripts %}{% endblock %}
 	{% block firebaseErrorCheck %}
 		<script>
 			try {
@@ -138,17 +140,17 @@
 	{% endblock %}
 	
 	{% block firebase %}
-		<script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-app.js">
+		<script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-app.js">
 		</script>
-		<script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-auth.js">
+		<script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-auth.js">
 		</script>
-		<script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-database.js">
+		<script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-database.js">
 		</script>
-		<script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-storage.js">
+		<script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-storage.js">
 		</script>
-		<!-- <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-firestore.js"></script> -->
-		<!-- <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-messaging.js"></script> -->
-		<!-- <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-functions.js"></script> -->
+		<!-- <script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-firestore.js"></script> -->
+		<!-- <script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-messaging.js"></script> -->
+		<!-- <script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-functions.js"></script> -->
 
 		<script>
 			// Initialize Firebase
