@@ -240,18 +240,17 @@
         $("#basic-data").removeClass("hidden");
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
-
-
+                $(".orig-email").text(user.providerData[0].email);
+                console.log(user);
                 var actionCodeSettings = {
-                    url: "https://www.t485.org/?email=" + firebase.auth().currentUser.email + ((getQuery("continue") != "" && getQuery("continue") != null) ? "&redir=" + getQuery("continue") : "")
+                    url: "https://beta.t485.org/?email=" + firebase.auth().currentUser.email + ((getQuery("continue") != "" && getQuery("continue") != null) ? "&redir=" + getQuery("continue") : "")
 
                 };
-                firebase.auth().currentUser.sendEmailVerification(actionCodeSettings)
+                user.sendEmailVerification(actionCodeSettings)
                     .then(function () {
                         // Verification email sent.
                         $("#basic-data").addClass("hidden");
                         $("#check-email").removeClass("hidden");
-
 
                     })
                     .catch(function (error) {
@@ -290,6 +289,7 @@
             }
             if (!invalid) {
                 firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
+                    errortext = "";
                     switch (error.code) {
                         case "auth/email-already-in-use":
                             $("#em-validation-none").addClass("hidden");
@@ -311,8 +311,9 @@
                         default:
                             errortext = "An unknown error occurred. (Code: " + error.code + ")";
                     }
-                    $("#error").html("Error: " + errortext);
-
+                    if (errortext !== "") {
+                        $("#error").html("Error: " + errortext);
+                    }
                 });
             }
         });
