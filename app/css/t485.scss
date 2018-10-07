@@ -7,8 +7,8 @@
     width: auto\9;
 }
 .hidden {
-    display:none;
+    display:none !important;/*hidden and default are ALWAYS applied*/
 }
 .invisible {
-    visibility:hidden;
+    visibility:hidden !important;/*hidden and default are ALWAYS applied*/
 }
