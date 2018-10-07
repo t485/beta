@@ -13,6 +13,7 @@
 		<title>Troop 485 - Login</title>
 		
 	
+
 	
 		<!-- Bootstrap core CSS -->
 		<link href="/css/bootstrap.min.css" rel="stylesheet">
@@ -29,6 +30,7 @@
 		<link rel="apple-touch-icon" sizes="152x152" href="/favicons/apple-touch-icon-152x152.png">
 		<link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon-180x180.png">
 		<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
+	
 	
 	
 	
@@ -121,13 +123,20 @@
     <div class="box w-100">
         <div class="col-lg-12">
             <h2 class="primary-heading">Login</h2>
-			
+
 
             <div>
-                
-                <button class="btn btn-primary btn-block" id="login">Login via Google</button>
+                <div class="form-group">
+                    <label for="email">Email address:</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter your email...">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter your password...">
+                </div>
+                <button class="btn btn-primary btn-block" id="login">Login</button>
 				<p class="text-danger" id="error"></p>
-                <p id="account-tray" class="text-center"><a href="/account/create.html">Create an account</a> | <a href="/account/forgotpassword.html">Forgot password</a></p>
+                <p id="account-tray" class="text-center"><a href="/account/create.html" id="create-link">Create an account</a> | <a href="/account/forgotpassword.html" id="forgot-password-link">Forgot password</a></p>
             </div>
         </div>
     </div>
@@ -146,17 +155,17 @@
 	
 
 	
-		<script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-app.js">
+		<script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-app.js">
 		</script>
-		<script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-auth.js">
+		<script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-auth.js">
 		</script>
-		<script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-database.js">
+		<script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-database.js">
 		</script>
-		<script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-storage.js">
+		<script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-storage.js">
 		</script>
-		<!-- <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-firestore.js"></script> -->
-		<!-- <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-messaging.js"></script> -->
-		<!-- <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-functions.js"></script> -->
+		<!-- <script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-firestore.js"></script> -->
+		<!-- <script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-messaging.js"></script> -->
+		<!-- <script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-functions.js"></script> -->
 
 		<script>
 			// Initialize Firebase
@@ -185,7 +194,10 @@
 	
 	
 <script>
-
+    if (getQuery("continue") != "" && getQuery("continue") != null) {
+        $("#create-link").attr("href", "/account/create.html?continue=" + getQuery("continue"));
+        $("#forgot-password-link").attr("href", "/account/forgotpassword.html?continue=" + getQuery("continue"));
+    }
 	firebase.auth().onAuthStateChanged(function(user) {
 		if (user) {
 			$("#error").html("");
@@ -202,9 +214,9 @@ $("#login").click(function() {
 	$("#error").html("");
     firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
 		$("#error").html("Error: Email/Password incorrect.");
-		console.log(3);
+
     })
-	
+
 });
 </script>
 
