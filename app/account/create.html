@@ -82,6 +82,7 @@
 
 
 
+
             firebase.database().ref("/u/" + user.uid + "/latestverificationemail/").once("value").then(function(snapshot) {
                 var data = snapshot.val();
                 if (data == null) {
@@ -138,6 +139,7 @@
             $("#unknown-error").removeClass("hidden");
             callback(false);
             console.log(error);
+
         });
 
     }
