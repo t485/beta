@@ -165,6 +165,7 @@
         }
         if (password !== confpassword) {
             $("#confirm-password").addClass("is-invalid")
+            invalid = true;
         }
         if (!invalid) {
             firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
