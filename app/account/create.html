@@ -29,10 +29,10 @@
             <div class="form-group">
                 <label for="email">Email address:</label>
                 <input type="email" class="form-control" id="email" placeholder="Enter your email...">
-                <div class="invalid-feedback">
+                <div class="invalid-feedback" id="em-validation-invalid">
                     Please enter a valid email.
                 </div>
-                <div class="invalid-feedback hidden">
+                <div class="invalid-feedback hidden" id="em-validation-inuse">
                     The email provided is already used in an account. <a href="/account/login" class="text-danger">Login</a> instead?
                 </div>
             </div>
@@ -169,16 +169,17 @@
         }
         if (!invalid) {
             firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
+
                 switch (error.code) {
                     case "auth/email-already-in-use":
-                        $("#em-validation-none").addClass("hidden");
-                        $("#pw-validation-inuse").removeClass("hidden");
+                        $("#em-validation-invalid").addClass("hidden");
+                        $("#em-validation-inuse").removeClass("hidden");
                         $("#email").addClass("is-invalid");
                         errortext = "";
                         break;
                     case "auth/invalid-email":
                         $("#em-validation-inuse").addClass("hidden");
-                        $("#pw-validation-none").removeClass("hidden");
+                        $("#em-validation-invalid").removeClass("hidden");
                         $("#email").addClass("is-invalid");
                         break;
                     case "auth/weak-password":
@@ -190,8 +191,9 @@
                     default:
                         errortext = "An unknown error occurred. (Code: " + error.code + ")";
                 }
-                $("#error").html("Error: " + errortext);
-
+                if (errortext) {
+                    $("#error").html("Error: " + errortext);
+                }
             });
         }
     });
