@@ -86,7 +86,7 @@
             firebase.database().ref("/u/" + user.uid + "/latestverificationemail/").once("value").then(function(snapshot) {
                 var data = snapshot.val();
                 if (data == null) {
-                    sendverificationemail(function(date) {
+                    sendverificationemail(user, function(date) {
                         if (date == false) {
                             //error
                             return;
@@ -99,7 +99,7 @@
             });
 
             $("#resend").click(function() {
-                sendverificationemail();
+                sendverificationemail(user);
 
             })
         } else {
@@ -115,22 +115,24 @@
             }
         }
     });
-    function sendverificationemail(callback) {
+    function sendverificationemail(user, callback) {
         var actionCodeSettings = {
             url: "https://www.t485.org/?email=" + firebase.auth().currentUser.email + ((getQuery("continue") != "" && getQuery("continue") != null) ? "&redir=" + getQuery("continue") : "")
 
         };
-        firebase.auth().currentUser.sendEmailVerification(actionCodeSettings)
+        user.sendEmailVerification(actionCodeSettings)
             .then(function () {
+                console.log(user);
                 // Verification email sent.
                 $("#loading").addClass("hidden");
                 $("#main-box").removeClass("hidden");
                 $("#basic-data").addClass("hidden");
                 $("#check-email").removeClass("hidden");
                 var date = new Date();
-                firebase.database().ref("/u/" + user.uid + "/latestverificationemail/").set(date);
-                firebase.database().ref("/u/" + user.uid + "/verificationemailhistory/").push(date);
+                firebase.database().ref("/users/" + user.uid + "/latestverificationemail/").set(date);
+                firebase.database().ref("/users/" + user.uid + "/verificationemailhistory/").set(date);
                 callback(date);
+                console.log(date);
             }).catch(function (error) {
             $("#loading").addClass("hidden");
             $("#main-box").removeClass("hidden");
