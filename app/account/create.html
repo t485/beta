@@ -55,12 +55,17 @@
             </div>
             <button class="btn btn-primary btn-block" id="next-btn">Next</button>
             <p class="text-danger" id="error"></p>
-            <p id="account-tray" class="text-center"><a href="/account/create.html">Create an account</a> | <a href="/account/forgotpassword.html">Forgot password</a></p>
+            <p id="account-tray" class="text-center"><a href="/account/login.html">Login</a> | <a href="/account/forgotpassword.html">Forgot password</a></p>
         </div>
         <div class="col-lg-12 hidden" id="check-email">
             <h2 class="primary-heading">Check your email!</h2>
             <p>We sent a verification email to <b class="orig-email">loading...</b> on <b class="sent-date">loading...</b>. Follow the link on that email to finish setting up your account.</p>
-
+            <p><a href="#" class="text-center resend" id="resend">Resend the verification email</a>
+                <span id="resend-countdown" class="resend hidden">You can resend the verification email in <b class="resend-time-remaining">Synchronizing...</b> second<span class="resend-plural">s</span>.</span>
+                <span id="resend-success" class="resend hidden">Email successfully resent. You can resend the verification email again in <b class="resend-time-remaining">60</b> second<span class="resend-plural">s</span>.</span>
+                <span id="error-resending" class="resend hidden">Error resending. <a href="/account/create.html">Please reload</a> to try again.</span>
+                <span id="resend-loading" class="resend hidden">Resending email...</span>
+            </p>
         </div>
         <div class="col-lg-12 hidden" id="unknown-error">
             <h2 class="primary-heading">An Error Occurred</h2>
@@ -87,32 +92,60 @@
                 var data = snapshot.val();
                 console.log(data);
                 if (data == null) {
-                    sendverificationemail(user, function(date) {
-                        console.log(date);
-                        console.log(date === false)
-                        console.log(date == null)
-                        console.log(date === false || date == null)
-                        if (date === false || date == null) {
-                            console.log(92);
+                    sendverificationemail(user, function(dateobj) {
+
+                        if (dateobj === false || dateobj == null) {
+
                             //error
-                            return;
+							console.log(dateobj);
+							$("#loading").addClass("hidden");
+							$("#main-box").removeClass("hidden");
+							$("#unknown-error-text").text("VERIF_EMAIL_FAILED");
+							$("#basic-data").addClass("hidden");
+							$("#check-email").addClass("hidden");
+							$("#unknown-error").removeClass("hidden");
                         } else {
-                            console.log(96);
-                            console.log(date.toLocaleString("en-US"));
-                            $(".sent-date").text(date.toLocaleString("en-US"));
+
+                            $(".sent-date").text(getHumanDate(dateobj));
                             $(".orig-email").text(user.providerData[0].email);
-                        }
+							startResendTimer(true);
+
+						}
 
                     });
                 } else {
+
+                    if (new Date() - new Date(data.date) < 60 * 1000) {//60 seconds ago
+						console.log(new Date() - new Date(data.date));
+						startResendTimer(true, 60 - (Math.round((new Date() - new Date(data.date)) / 1000)));
+
+					}
                     console.log(data);
-                    $(".sent-date").text(data.toLocaleString("en-US"));
+                    $(".sent-date").text(getHumanDate(data));
                     $(".orig-email").text(user.providerData[0].email);
                 }
+                $("#loading").addClass("hidden");
+                $("#main-box").removeClass("hidden");
+                $("#basic-data").addClass("hidden");
+                $("#check-email").removeClass("hidden");
             });
 
             $("#resend").click(function() {
-                sendverificationemail(user);
+            	$(".resend").addClass("hidden");
+            	$("#resend-loading").removeClass("hidden");
+                sendverificationemail(user, function(dateobj) {
+					if (dateobj === false || dateobj == null) {
+						$("#resend").addClass("hidden");
+						$("#resend-error").removeClass("hidden");
+						//error
+
+					} else {
+						startResendTimer();
+
+						$(".sent-date").text(getHumanDate(dateobj));
+						$(".orig-email").text(user.providerData[0].email);
+					}
+                });
 
             })
         } else {
@@ -128,8 +161,66 @@
             }
         }
     });
+    var resendInterval;
+    function startResendTimer(firstTime, secondsLeft) {
+		firstTime = firstTime || false;
+    	//if firstTime is true, we assume the verification email was sent but not resent(the account was just created),
+        //so we show a slightly different message.
+		secondsLeft = secondsLeft || 60;
+		$(".resend-time-remaining").text("Synchronizing...");
+		$(".resend-plural").removeClass("hidden");
+		$(".resend").addClass("hidden");
+		if (firstTime) {
+			$("#resend-countdown").removeClass("hidden");
+        } else {
+			$("#resend-success").removeClass("hidden");
+        }
+		clearInterval(resendInterval);
+		resendInterval = setInterval(function(){
+			if (secondsLeft == 1) {
+				$(".resend-plural").addClass("hidden");
+            } else if (secondsLeft == 0) {
+				$(".resend-plural").removeClass("hidden");
+            }
+			$(".resend-time-remaining").text(secondsLeft);
+			secondsLeft --;
+			if (secondsLeft < 0) {
+				clearInterval(resendInterval);
+
+				$(".resend").addClass("hidden");
+				$("#resend").removeClass("hidden");
+			}
+		}, 1000);
+    }
+    function getHumanDate(dateobj) {
+        var date = dateobj.date;
+        if (typeof date === "string") {
+            date = new Date(date);
+        }
+        console.log(dateobj);
+        var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];//for clarity
+        var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+        var day = days[date.getDay()];
+        var dayOfMonth = date.getDate();
+        var month = months[date.getMonth()];
+        var year = date.getFullYear();
+        var time = date.toLocaleTimeString("en-US");
+        var timediffhour = "" + Math.floor(dateobj.timezone.offset / 60);
+        if (timediffhour.length === 1) {
+			timediffhour = "0" + timediffhour;
+        }
+		var timediffminutes = "" + (dateobj.timezone.offset % 60);
+		if (timediffminutes.length === 1) {
+			timediffminutes = "0" + timediffminutes;
+		} else if (timediffminutes.length === 0) {
+			timediffminutes = "00" + timediffminutes;
+		}
+		var iata = dateobj.timezone.iata;
+		return day + ", " + month + " " + dayOfMonth + ", " + year + " at " + time + " UTC-" + timediffhour + timediffminutes + "(" + iata + ")";
+
+
+    }
     function sendverificationemail(user, callback) {
-        firebase.database().ref("/users/" + user.uid + "/latestverificationemail/").set("hi")
         var actionCodeSettings = {
             url: "https://www.t485.org/?email=" + firebase.auth().currentUser.email + ((getQuery("continue") != "" && getQuery("continue") != null) ? "&redir=" + getQuery("continue") : "")
 
@@ -138,37 +229,30 @@
             .then(function () {
                 console.log(user);
                 // Verification email sent.
-                $("#loading").addClass("hidden");
-                $("#main-box").removeClass("hidden");
-                $("#basic-data").addClass("hidden");
-                $("#check-email").removeClass("hidden");
-                var date = new Date();
-                console.log(date);
-                console.log(user.uid);
-                console.log(147);
-                console.log(firebase.database().ref("/users/" + user.uid + "/latestverificationemail/").set({date}));
-                firebase.database().ref("/users/" + user.uid + "/latestverificationemail/").set(date).catch(function(error) {
-                    console.log(error);
-                }).then(function(success) {
-                    console.log(151);
-                    console.log(success);
-                });
-                console.log(154);
-                firebase.database().ref("/users/" + user.uid + "/verificationemailhistory/").push(date).catch(function(error) {
-                    console.log(error);
-                }).then(function(success) {
-                    console.log(158);
-                    console.log(success);
-                });
-                firebase.database().ref("users/" + user.uid).set({
-                    latestverificationemail:date
-                });
-                console.log(161);
 
-                console.log(163);
-                callback(date);
-                console.log(date);
+                var date = new Date();
+                var dateobj = {
+                    date:(date + ""),// + "" is IMPORTANT!! otherwise date is pushed to
+					// Firebase as undefined even though console.log prints it as a string.
+                    timezone: {
+                        iata: Intl.DateTimeFormat().resolvedOptions().timeZone,//IANA time zone (e.g. America/Los_Angeles)
+                        offset: date.getTimezoneOffset()//in minutes
+                    }
+                }
+
+                //console.log(firebase.database().ref("/users/" + user.uid + "/latestverificationemail/").set({date}));
+                firebase.database().ref("/users/" + user.uid + "/latestverificationemail/").set(dateobj).catch(function(error) {
+                    console.log(error);
+
+                });
+                firebase.database().ref("/users/" + user.uid + "/verificationemailhistory/").push(dateobj).catch(function(error) {
+                    console.log(error);
+                });
+                if (callback) {
+					callback(dateobj);
+				}
             }).catch(function (error) {
+            	console.log(error);
                 $("#loading").addClass("hidden");
                 $("#main-box").removeClass("hidden");
                 $("#unknown-error-text").text(error.code);
@@ -176,7 +260,6 @@
                 $("#check-email").addClass("hidden");
                 $("#unknown-error").removeClass("hidden");
                 callback(false);
-                console.log(error);
 
         });
 
@@ -207,7 +290,7 @@
         }
         if (!invalid) {
             firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
-
+                var errortext = "";
                 switch (error.code) {
                     case "auth/email-already-in-use":
                         $("#em-validation-invalid").addClass("hidden");
@@ -224,12 +307,12 @@
                         //errortext = "The password is not strong enough. Try adding uppercase and lowercase letters, numbers, and special symbols.";
                         $("#pw-validation-strength").removeClass("hidden");
                         $("#pw-validation-none").addClass("hidden");
-                        $("#confirm-password").addClass("is-invalid");
+                        $("#password").addClass("is-invalid");
                         break;
                     default:
                         errortext = "An unknown error occurred. (Code: " + error.code + ")";
                 }
-                if (errortext) {
+                if (errortext != null && errortext !== "") {
                     $("#error").html("Error: " + errortext);
                 }
             });

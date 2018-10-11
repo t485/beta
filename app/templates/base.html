@@ -131,7 +131,7 @@
 	{% endblock %}
 	{% block mainOuter %}
 
-		<div class="container">
+		<div class="container" id="mainContainer">
 			{% block main %}
 
 				<div class="row">
@@ -147,6 +147,22 @@
 				</div>
 			{%endblock %}
 		</div>
+	{% endblock %}
+	{% block unexpectederror %}
+	<div class="container" id="unexpectederror">
+
+		<div class="row">
+			<div class="box">
+				<div class="col-lg-12">
+					<h2 class="error">An Unexpected Error Occured</h2>
+
+
+					<p>Please report this bug or try again in a few minutes. <b>Code <span id="unexpectederror-code">UNKNOWN_ERR</span></b></p>
+
+				</div>
+			</div>
+		</div>
+	</div>
 	{% endblock %}
 	{% block footer %}
 
