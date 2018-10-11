@@ -138,6 +138,7 @@ gulp.task("browserSync", function () {
         server: {
             baseDir: "./docs/"
         },
+        files: ['app/css/*', 'app/**/*.html', 'app/js/*']
     });
 });
 
