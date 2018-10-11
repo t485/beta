@@ -129,7 +129,7 @@
 	
 	
 
-		<div class="container">
+		<div class="container" id="mainContainer">
 			
 
 <div class="row col-lg-12">
@@ -149,7 +149,7 @@
                 </div>
                 <button class="btn btn-primary btn-block" id="login">Login</button>
 				<p class="text-danger" id="error"></p>
-                <p id="account-tray" class="text-center"><a href="/account/create.html" id="create-link">Create an account</a> | <a href="/account/forgotpassword.html" id="forgot-password-link">Forgot password</a></p>
+                <p id="account-tray" class="text-center"><a href="/account/create.html" id="create-link">Create an account</a> | <a href="/account/resetpassword.html" id="forgot-password-link">Forgot password</a></p>
             </div>
         </div>
     </div>
@@ -157,6 +157,22 @@
 
 
 		</div>
+	
+	
+	<div class="container hidden" id="unexpectederror">
+
+		<div class="row">
+			<div class="box">
+				<div class="col-lg-12">
+					<h2 class="error">An Unexpected Error Occured</h2>
+
+
+					<p>Please report this bug or try again in a few minutes. <b>Code <span id="unexpectederror-code">UNKNOWN_ERR</span></b></p>
+
+				</div>
+			</div>
+		</div>
+	</div>
 	
 	
 
@@ -210,7 +226,7 @@
 <script>
     if (getQuery("continue") != "" && getQuery("continue") != null) {
         $("#create-link").attr("href", "/account/create.html?continue=" + getQuery("continue"));
-        $("#forgot-password-link").attr("href", "/account/forgotpassword.html?continue=" + getQuery("continue"));
+        $("#forgot-password-link").attr("href", "/account/resetpassword.html?continue=" + getQuery("continue"));
     }
 	firebase.auth().onAuthStateChanged(function(user) {
 		if (user) {
