@@ -135,22 +135,15 @@
 <div class="row col-lg-12">
     <div class="box w-100">
         <div class="col-lg-12">
-            <h2 class="primary-heading">Login</h2>
+            <h2 class="primary-heading">Logout</h2>
 
 
             <div>
-                <div class="form-group">
-                    <label for="email">Email address:</label>
-                    <input type="email" class="form-control" id="email" placeholder="Enter your email...">
-                </div>
-                <div class="form-group">
-                    <label for="password">Password:</label>
-                    <input type="password" class="form-control" id="password" placeholder="Enter your password...">
-                </div>
-                <button class="btn btn-primary btn-block" id="login">Login</button>
-				<p class="text-danger" id="error"></p>
-                <p id="account-tray" class="text-center"><a href="/account/create.html" id="create-link">Create an account</a> | <a href="/account/forgotpassword.html" id="forgot-password-link">Forgot password</a></p>
+                <p>
+                    You have been successfully logged out.
+                </p>
             </div>
+
         </div>
     </div>
 </div>
@@ -208,30 +201,12 @@
 	
 	
 <script>
-    if (getQuery("continue") != "" && getQuery("continue") != null) {
-        $("#create-link").attr("href", "/account/create.html?continue=" + getQuery("continue"));
-        $("#forgot-password-link").attr("href", "/account/forgotpassword.html?continue=" + getQuery("continue"));
-    }
-	firebase.auth().onAuthStateChanged(function(user) {
-		if (user) {
-			$("#error").html("");
-			if (getQuery("continue") == "" || getQuery("continue") == null) {
-				window.location.href = "/account/";
-			} else {
-				window.location.href = getQuery("continue");
-			}
-		}
-	});
-$("#login").click(function() {
-	var email = $("#email").val();
-	var password = $("#password").val();
-	$("#error").html("");
-    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-		$("#error").html("Error: Email/Password incorrect.");
-
-    })
-
-});
+    firebase.auth().signOut().then(function() {
+        // Sign-out successful.
+    }).catch(function(error) {
+        // An error happened.
+        console.log(error);
+    });
 </script>
 
 	 

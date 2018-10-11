@@ -1,8 +1,17 @@
 {% extends "base.html" %} 
 
 {% block main %}
+<div class="row col-lg-12" id="loading">
+    <div class="box w-100">
+        <div class="col-lg-12" id="loading-inner">
+            <h2 class="primary-heading">Loading...</h2>
+            <p class="text-muted">Loading...</p>
 
-<div class="row col-lg-12" id="nokey-box">
+
+        </div>
+    </div>
+</div>
+<div class="row col-lg-12 hidden" id="nokey-box">
     <div class="box w-100">
         <div class="col-lg-12" id="nokey">
             <h2 class="primary-heading">Create Account</h2>
@@ -20,10 +29,10 @@
             <div class="form-group">
                 <label for="email">Email address:</label>
                 <input type="email" class="form-control" id="email" placeholder="Enter your email...">
-                <div class="invalid-feedback">
+                <div class="invalid-feedback" id="em-validation-invalid">
                     Please enter a valid email.
                 </div>
-                <div class="invalid-feedback hidden">
+                <div class="invalid-feedback hidden" id="em-validation-inuse">
                     The email provided is already used in an account. <a href="/account/login" class="text-danger">Login</a> instead?
                 </div>
             </div>
@@ -50,11 +59,11 @@
         </div>
         <div class="col-lg-12 hidden" id="check-email">
             <h2 class="primary-heading">Check your email!</h2>
-            <p>We sent a verification email to <b class="orig-email">loading...</b>. Follow the link on that email to finish setting up your account.</p>
+            <p>We sent a verification email to <b class="orig-email">loading...</b> on <b class="sent-date">loading...</b>. Follow the link on that email to finish setting up your account.</p>
 
         </div>
         <div class="col-lg-12 hidden" id="unknown-error">
-            <h2 class="primary-heading">An Error Occured</h2>
+            <h2 class="primary-heading">An Error Occurred</h2>
             <p>If this was unexpected, please contact the webmaster. Code: <span id="unknown-error-text">unknown-error</span></p>
 
         </div>
@@ -66,92 +75,131 @@
 
 {% block scripts %}
 <script id="scripts">
-    if (getQuery("key") != "test") {
-        $("#main-box").remove();
-        $("#scripts").remove();
-    } else {
-        $("#nokey-box").addClass("hidden");
-        $("#main-box").removeClass("hidden");
-        $("#basic-data").removeClass("hidden");
-        firebase.auth().onAuthStateChanged(function (user) {
-            if (user) {
 
 
-                var actionCodeSettings = {
-                    url: "https://www.t485.org/?email=" + firebase.auth().currentUser.email + ((getQuery("continue") != "" && getQuery("continue") != null) ? "&redir=" + getQuery("continue") : "")
-
-                };
-                firebase.auth().currentUser.sendEmailVerification(actionCodeSettings)
-                    .then(function () {
-                        // Verification email sent.
-                        $("#basic-data").addClass("hidden");
-                        $("#check-email").removeClass("hidden");
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
 
 
-                    })
-                    .catch(function (error) {
 
-                        $("#unknown-error-text").text(error.code);
-                        $("#basic-data").addClass("hidden");
-                        $("#unknown-error").removeClass("hidden");
 
-                        console.log(error);
+            firebase.database().ref("/u/" + user.uid + "/latestverificationemail/").once("value").then(function(snapshot) {
+                var data = snapshot.val();
+                if (data == null) {
+                    sendverificationemail(user, function(date) {
+                        if (date == false) {
+                            //error
+                            return;
+                        }
+
                     });
-            }
-        })
+                } else {
+                    $("#sent-date").text(date.toLocaleString("en-US"))
+                }
+            });
 
-        $("#next-btn").click(function () {
-            $("#basic-data .form-control").removeClass("is-invalid")
-            var email = $("#email").val();
-            var password = $("#password").val();
-            var confpassword = $("#confirm-password").val();
-            $(".orig-email").text(email);
-            $("#error").html("");
-            var invalid = false;
-            if (email.replaceAll(" ", "") == "" || email == null) {
-                $("#em-validation-inuse").addClass("hidden");
-                $("#pw-validation-none").removeClass("hidden");
-                $("#email").addClass("is-invalid");
-                invalid = true;
-            }
-            if (password.replaceAll(" ", "") == "" || password == null) {
-                $("#pw-validation-strength").addClass("hidden");//message when weak password
-                $("#pw-validation-none").removeClass("hidden");//validation message when no password
-                $("#password").addClass("is-invalid");
-                invalid = true;
-            }
-            if (password !== confpassword) {
-                $("#confirm-password").addClass("is-invalid")
-            }
-            if (!invalid) {
-                firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
-                    switch (error.code) {
-                        case "auth/email-already-in-use":
-                            $("#em-validation-none").addClass("hidden");
-                            $("#pw-validation-inuse").removeClass("hidden");
-                            $("#email").addClass("is-invalid");
-                            errortext = "";
-                            break;
-                        case "auth/invalid-email":
-                            $("#em-validation-inuse").addClass("hidden");
-                            $("#pw-validation-none").removeClass("hidden");
-                            $("#email").addClass("is-invalid");
-                            break;
-                        case "auth/weak-password":
-                            //errortext = "The password is not strong enough. Try adding uppercase and lowercase letters, numbers, and special symbols.";
-                            $("#pw-validation-strength").removeClass("hidden");
-                            $("#pw-validation-none").addClass("hidden");
-                            $("#confirm-password").addClass("is-invalid");
-                            break;
-                        default:
-                            errortext = "An unknown error occurred. (Code: " + error.code + ")";
-                    }
-                    $("#error").html("Error: " + errortext);
+            $("#resend").click(function() {
+                sendverificationemail(user);
 
-                });
+            })
+        } else {
+            if (getQuery("key") != "test") {
+                $("#main-box").remove();
+                $("#scripts").remove();
+                $("#loading").addClass("hidden");
+                $("#nokey-box").removeClass("hidden");
+            } else {
+                $("#loading").addClass("hidden");
+                $("#main-box").removeClass("hidden");
+                $("#basic-data").removeClass("hidden");
             }
+        }
+    });
+    function sendverificationemail(user, callback) {
+        var actionCodeSettings = {
+            url: "https://www.t485.org/?email=" + firebase.auth().currentUser.email + ((getQuery("continue") != "" && getQuery("continue") != null) ? "&redir=" + getQuery("continue") : "")
+
+        };
+        user.sendEmailVerification(actionCodeSettings)
+            .then(function () {
+                console.log(user);
+                // Verification email sent.
+                $("#loading").addClass("hidden");
+                $("#main-box").removeClass("hidden");
+                $("#basic-data").addClass("hidden");
+                $("#check-email").removeClass("hidden");
+                var date = new Date();
+                firebase.database().ref("/users/" + user.uid + "/latestverificationemail/").set(date);
+                firebase.database().ref("/users/" + user.uid + "/verificationemailhistory/").set(date);
+                callback(date);
+                console.log(date);
+            }).catch(function (error) {
+            $("#loading").addClass("hidden");
+            $("#main-box").removeClass("hidden");
+            $("#unknown-error-text").text(error.code);
+            $("#basic-data").addClass("hidden");
+            $("#unknown-error").removeClass("hidden");
+            callback(false);
+            console.log(error);
+
         });
 
     }
+    $("#next-btn").click(function () {
+        $("#basic-data .form-control").removeClass("is-invalid")
+        var email = $("#email").val();
+        var password = $("#password").val();
+        var confpassword = $("#confirm-password").val();
+        $(".orig-email").text(email);
+        $("#error").html("");
+        var invalid = false;
+        if (email.replaceAll(" ", "") == "" || email == null) {
+            $("#em-validation-inuse").addClass("hidden");
+            $("#pw-validation-none").removeClass("hidden");
+            $("#email").addClass("is-invalid");
+            invalid = true;
+        }
+        if (password.replaceAll(" ", "") == "" || password == null) {
+            $("#pw-validation-strength").addClass("hidden");//message when weak password
+            $("#pw-validation-none").removeClass("hidden");//validation message when no password
+            $("#password").addClass("is-invalid");
+            invalid = true;
+        }
+        if (password !== confpassword) {
+            $("#confirm-password").addClass("is-invalid")
+            invalid = true;
+        }
+        if (!invalid) {
+            firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
+
+                switch (error.code) {
+                    case "auth/email-already-in-use":
+                        $("#em-validation-invalid").addClass("hidden");
+                        $("#em-validation-inuse").removeClass("hidden");
+                        $("#email").addClass("is-invalid");
+                        errortext = "";
+                        break;
+                    case "auth/invalid-email":
+                        $("#em-validation-inuse").addClass("hidden");
+                        $("#em-validation-invalid").removeClass("hidden");
+                        $("#email").addClass("is-invalid");
+                        break;
+                    case "auth/weak-password":
+                        //errortext = "The password is not strong enough. Try adding uppercase and lowercase letters, numbers, and special symbols.";
+                        $("#pw-validation-strength").removeClass("hidden");
+                        $("#pw-validation-none").addClass("hidden");
+                        $("#confirm-password").addClass("is-invalid");
+                        break;
+                    default:
+                        errortext = "An unknown error occurred. (Code: " + error.code + ")";
+                }
+                if (errortext) {
+                    $("#error").html("Error: " + errortext);
+                }
+            });
+        }
+    });
+
+
 </script>
 {% endblock %}
