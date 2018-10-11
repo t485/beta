@@ -259,21 +259,34 @@
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
 
+            console.log(user);
 
 
-
-            firebase.database().ref("/u/" + user.uid + "/latestverificationemail/").once("value").then(function(snapshot) {
+            firebase.database().ref("/users/" + user.uid + "/latestverificationemail/").once("value").then(function(snapshot) {
                 var data = snapshot.val();
+                console.log(data);
                 if (data == null) {
                     sendverificationemail(user, function(date) {
-                        if (date == false) {
+                        console.log(date);
+                        console.log(date === false)
+                        console.log(date == null)
+                        console.log(date === false || date == null)
+                        if (date === false || date == null) {
+                            console.log(92);
                             //error
                             return;
+                        } else {
+                            console.log(96);
+                            console.log(date.toLocaleString("en-US"));
+                            $(".sent-date").text(date.toLocaleString("en-US"));
+                            $(".orig-email").text(user.providerData[0].email);
                         }
 
                     });
                 } else {
-                    $("#sent-date").text(date.toLocaleString("en-US"))
+                    console.log(data);
+                    $(".sent-date").text(data.toLocaleString("en-US"));
+                    $(".orig-email").text(user.providerData[0].email);
                 }
             });
 
@@ -295,6 +308,7 @@
         }
     });
     function sendverificationemail(user, callback) {
+        firebase.database().ref("/users/" + user.uid + "/latestverificationemail/").set("hi")
         var actionCodeSettings = {
             url: "https://www.t485.org/?email=" + firebase.auth().currentUser.email + ((getQuery("continue") != "" && getQuery("continue") != null) ? "&redir=" + getQuery("continue") : "")
 
@@ -308,18 +322,40 @@
                 $("#basic-data").addClass("hidden");
                 $("#check-email").removeClass("hidden");
                 var date = new Date();
-                firebase.database().ref("/users/" + user.uid + "/latestverificationemail/").set(date);
-                firebase.database().ref("/users/" + user.uid + "/verificationemailhistory/").set(date);
+                console.log(date);
+                console.log(user.uid);
+                console.log(147);
+                console.log(firebase.database().ref("/users/" + user.uid + "/latestverificationemail/").set({date}));
+                firebase.database().ref("/users/" + user.uid + "/latestverificationemail/").set(date).catch(function(error) {
+                    console.log(error);
+                }).then(function(success) {
+                    console.log(151);
+                    console.log(success);
+                });
+                console.log(154);
+                firebase.database().ref("/users/" + user.uid + "/verificationemailhistory/").push(date).catch(function(error) {
+                    console.log(error);
+                }).then(function(success) {
+                    console.log(158);
+                    console.log(success);
+                });
+                firebase.database().ref("users/" + user.uid).set({
+                    latestverificationemail:date
+                });
+                console.log(161);
+
+                console.log(163);
                 callback(date);
                 console.log(date);
             }).catch(function (error) {
-            $("#loading").addClass("hidden");
-            $("#main-box").removeClass("hidden");
-            $("#unknown-error-text").text(error.code);
-            $("#basic-data").addClass("hidden");
-            $("#unknown-error").removeClass("hidden");
-            callback(false);
-            console.log(error);
+                $("#loading").addClass("hidden");
+                $("#main-box").removeClass("hidden");
+                $("#unknown-error-text").text(error.code);
+                $("#basic-data").addClass("hidden");
+                $("#check-email").addClass("hidden");
+                $("#unknown-error").removeClass("hidden");
+                callback(false);
+                console.log(error);
 
         });
 
