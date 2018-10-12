@@ -279,12 +279,16 @@
             invalid = true;
         }
         if (password.replaceAll(" ", "") == "" || password == null) {
+			$("#password").val("");
+			$("#confirm-password").val("");
             $("#pw-validation-strength").addClass("hidden");//message when weak password
             $("#pw-validation-none").removeClass("hidden");//validation message when no password
             $("#password").addClass("is-invalid");
             invalid = true;
         }
         if (password !== confpassword) {
+			$("#password").val("");
+			$("#confirm-password").val("");
             $("#confirm-password").addClass("is-invalid")
             invalid = true;
         }
@@ -304,6 +308,8 @@
                         $("#email").addClass("is-invalid");
                         break;
                     case "auth/weak-password":
+						$("#password").val("");
+						$("#confirm-password").val("");
                         //errortext = "The password is not strong enough. Try adding uppercase and lowercase letters, numbers, and special symbols.";
                         $("#pw-validation-strength").removeClass("hidden");
                         $("#pw-validation-none").addClass("hidden");

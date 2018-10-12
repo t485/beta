@@ -21,9 +21,19 @@
 		</div>
 	</div>
 </div>
+<div class="row col-lg-12 hidden" id="error-box">
+	<div class="box w-100">
+		<div class="col-lg-12">
+			<h2 class="primary-heading error-title">An Unknown Error Occurred</h2>
+			<p class="text-muted error-text">Please get a new link and try again later (Code: UNKNOWN_ERR). </p>
+
+
+		</div>
+	</div>
+</div>
 <div class="row col-lg-12 hidden" id="pw-reset-box">
 	<div class="box w-100">
-		<div class="col-lg-12 hidden" id="pw-reset">
+		<div class="col-lg-12" id="pw-reset">
 			<h2 class="primary-heading">Reset Password</h2>
 
 			<div class="form-group">
@@ -93,15 +103,15 @@
 		switch (mode) {
 			case 'resetPassword':
 				// Display reset password handler and UI.
-				handleResetPassword(auth, actionCode, continueUrl, lang);
+				handleResetPassword(actionCode, continueUrl, lang);
 				break;
 			case 'recoverEmail':
 				// Display email recovery handler and UI.
-				handleRecoverEmail(auth, actionCode, lang);
+				handleRecoverEmail(actionCode, lang);
 				break;
 			case 'verifyEmail':
 				// Display email verification handler and UI.
-				handleVerifyEmail(auth, actionCode, continueUrl, lang);
+				handleVerifyEmail(actionCode, continueUrl, lang);
 				break;
 			default:
 				// Error: invalid mode.
@@ -109,14 +119,15 @@
 				$("#badurl-box").removeClass("hidden");
 		}
 	}
-	function handleResetPassword(auth, actionCode, continueUrl, lang) {
+	function handleResetPassword(actionCode, continueUrl, lang) {
 
 
 		// Verify the password reset code is valid.
-		auth.verifyPasswordResetCode(actionCode).then(function(email) {
+		firebase.auth().verifyPasswordResetCode(actionCode).then(function(email) {
+			$("#loading").addClass("hidden");
+			$("#pw-reset-box").removeClass("hidden");
 			$("#pw-update").click(function() {
-				$("#loading").addClass("hidden");
-				$("#pw-reset-box").removeClass("hidden");
+
 				var invalid = false;
 				if (email !== $("#pw-reset-email").val()) {
 					$("#pw-reset-email").addClass("hidden");
@@ -124,13 +135,17 @@
 					$("#pw-reset-email").addClass("is-invalid");
 					invalid = true;
 				}
-				if ($("#pw-reset-password").val() !== $("#pw-reset-confirm-password").val()) {
+				var newPassword = $("#pw-reset-password").val();
+				if (newPassword !== $("#pw-reset-confirm-password").val()) {
 					$("#pw-reset-confirm-password").addClass("is-invalid");
+					invalid = true;
+					$("#pw-reset-password").val("");
+					$("#pw-reset-confirm-password").val("");
 				}
-
+				console.log(newPassword);
 				if (!invalid) {
 
-					auth.confirmPasswordReset(actionCode, newPassword).then(function (resp) {
+					firebase.auth().confirmPasswordReset(actionCode, newPassword).then(function (resp) {
 						// Password reset has been confirmed and new password updated.
 
 						// TODO: Display a link back to the app, or sign-in the user directly
@@ -147,18 +162,24 @@
 						console.log(error);
 						switch (error.code) {
 
-							case "TODO":
+							case "auth/weak-password":
+								$("#pw-reset-password").val("");
+								$("#pw-reset-confirm-password").val("");
 								$("#em-validation-invalid").addClass("hidden");
 								$("#em-validation-inuse").removeClass("hidden");
 								$("#email").addClass("is-invalid");
 								errortext = "";
 								break;
-							case "TODO":
-								$("#em-validation-inuse").addClass("hidden");
-								$("#em-validation-invalid").removeClass("hidden");
-								$("#email").addClass("is-invalid");
+							case "auth/user-not-found":
+							case "auth/user-disabled":
+								errortext = "The user to which this action code was issued from was disabled or deleted";
 								break;
-
+							case "auth/expired-action-code":
+								errortext = "The link given has been expired. <a href='/account/resetpassword.html'>Reset your password again</a> to get a new link."
+								break;
+							case "auth/invalid-action-code":
+								errortext = "The link given has already been used. <a href='/account/resetpassword.html'>Reset your password again</a> to get a new link."
+								break;
 							default:
 								errortext = "An unknown error occurred. (Code: " + error.code + ")";
 						}
@@ -177,23 +198,24 @@
 			console.log(error);
 			switch (error.code) {
 
-				case "TODO":
-					$("#em-validation-invalid").addClass("hidden");
-					$("#em-validation-inuse").removeClass("hidden");
-					$("#email").addClass("is-invalid");
-					errortext = "";
+				case "auth/user-not-found":
+				case "auth/user-disabled":
+					errortext = "The user to which this action code was issued from was disabled or deleted";
 					break;
-				case "TODO":
-					$("#em-validation-inuse").addClass("hidden");
-					$("#em-validation-invalid").removeClass("hidden");
-					$("#email").addClass("is-invalid");
+				case "auth/expired-action-code":
+					errortext = "The link given has been expired. <a href='/account/resetpassword.html'>Reset your password again</a> to get a new link."
 					break;
-
+				case "auth/invalid-action-code":
+					errortext = "The link given has already been used. <a href='/account/resetpassword.html'>Reset your password again</a> to get a new link."
+					break;
 				default:
 					errortext = "An unknown error occurred. (Code: " + error.code + ")";
 			}
 			if (errortext != null && errortext !== "") {
-				$("#error").html("Error: " + errortext);
+				$("#loading").addClass("hidden");
+				$("#error-box").removeClass("hidden");
+				$(".error-title").html("Error");
+				$(".error-text").html("Error: " + errortext);
 			}
 		});
 	}
