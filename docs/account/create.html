@@ -185,7 +185,7 @@
             </div>
             <button class="btn btn-primary btn-block" id="next-btn">Next</button>
             <p class="text-danger" id="error"></p>
-            <p id="account-tray" class="text-center"><a href="/account/login.html">Login</a> | <a href="/account/resetpassword.html">Forgot password</a></p>
+			<p id="account-tray" class="text-center"><a href="/account/login.html" id="login-link">Login</a> | <a href="/account/resetpassword.html" id="forgot-password-link">Forgot password</a></p>
         </div>
         <div class="col-lg-12 hidden" id="check-email">
             <h2 class="primary-heading">Check your email!</h2>
@@ -276,7 +276,10 @@
 	
 <script id="scripts">
 
-
+	if (getQuery("continue") != "" && getQuery("continue") != null) {
+		$("#login-link").attr("href", "/account/create.html?continue=" + getQuery("continue"));
+		$("#forgot-password-link").attr("href", "/account/resetpassword.html?continue=" + getQuery("continue"));
+	}
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
 
@@ -416,11 +419,12 @@
 
     }
     function sendverificationemail(user, callback) {
-        var actionCodeSettings = {
+    	//continue url not supported because the user usually does not create an account spontaneously(in the middle of a session) due to create links.
+        /*var actionCodeSettings = {
             url: "https://www.t485.org/?email=" + firebase.auth().currentUser.email + ((getQuery("continue") != "" && getQuery("continue") != null) ? "&redir=" + getQuery("continue") : "")
 
-        };
-        user.sendEmailVerification(actionCodeSettings)
+        };*/
+        user.sendEmailVerification(/*actionCodeSettings*/)
             .then(function () {
                 console.log(user);
                 // Verification email sent.

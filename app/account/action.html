@@ -31,6 +31,18 @@
 		</div>
 	</div>
 </div>
+<div class="row col-lg-12 hidden" id="success-box">
+	<div class="box w-100">
+		<div class="col-lg-12">
+			<h2 class="primary-heading success-title">An Unknown Error Occurred</h2>
+			<div class="success-body">
+
+			</div>
+
+
+		</div>
+	</div>
+</div>
 <div class="row col-lg-12 hidden" id="pw-reset-box">
 	<div class="box w-100">
 		<div class="col-lg-12" id="pw-reset">
@@ -83,6 +95,29 @@
 
 {% block scripts %}
 <script id="scripts">
+	firebase.auth().signOut().then(function() {
+		// Sign-out successful.
+		firebase.auth().onAuthStateChanged(function(user) {
+			if (user) {
+				if (getQuery("mode") == "resetPassword") {
+					$(".success-title").text("Password successfully updated");
+					if (getQuery('continueUrl') != null && getQuery('continueUrl') !== "") {
+						$(".success-body").html("<p>Your password has been updated and you have been logged in.</p>" +
+							"<a class='btn btn-primary btn-block' href='" + getQuery('continueUrl') + "'>Continue to " + getQuery('continueUrl') + "</a>");
+					} else {
+						$(".success-body").html("<p>Your password has been updated and you have been logged in.</p>" +
+							"<a class='btn btn-primary btn-block' href='/'>Return to home page</a>");
+					}
+					$("#pw-reset-box").addClass("hidden");
+					$("#success-box").removeClass("hidden");
+				}
+			}
+		})
+	}).catch(function(error) {
+		// An error happened.
+		console.log(error);
+	});
+
 	if (getQuery("mode") == null || getQuery("oobCode") == null) {
 		$("#loading").addClass("hidden");
 		$("#badurl-box").removeClass("hidden");
@@ -148,13 +183,11 @@
 					firebase.auth().confirmPasswordReset(actionCode, newPassword).then(function (resp) {
 						// Password reset has been confirmed and new password updated.
 
-						// TODO: Display a link back to the app, or sign-in the user directly
-						// if the page belongs to the same domain as the app:
-						// auth.signInWithEmailAndPassword(accountEmail, newPassword);
 
-						// TODO: If a continue URL is available, display a button which on
-						// click redirects the user back to the app via continueUrl with
-						// additional state determined from that URL's parameters.
+						 firebase.auth().signInWithEmailAndPassword(email, newPassword);
+
+
+
 					}).catch(function (error) {
 						// Error occurred during confirmation. The code might have expired or the
 						// password is too weak.
