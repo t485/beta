@@ -20,7 +20,7 @@
                 </div>
                 <button class="btn btn-primary btn-block" id="login">Login</button>
 				<p class="text-danger" id="error"></p>
-                <p id="account-tray" class="text-center"><a href="/account/create.html" id="create-link">Create an account</a> | <a href="/account/resetpassword.html" id="forgot-password-link">Forgot password</a></p>
+                <p id="account-tray" class="text-center"><a href="/account/create.html" id="create-link" class="preserve-state">Create an account</a> | <a href="/account/resetpassword.html" id="forgot-password-link" class="preserve-state">Forgot password</a></p>
             </div>
         </div>
     </div>
@@ -30,10 +30,7 @@
 
 {% block scripts %}
 <script>
-    if (getQuery("continue") != "" && getQuery("continue") != null) {
-        $("#create-link").attr("href", "/account/create.html?continue=" + getQuery("continue"));
-        $("#forgot-password-link").attr("href", "/account/resetpassword.html?continue=" + getQuery("continue"));
-    }
+
 	firebase.auth().onAuthStateChanged(function(user) {
 		if (user) {
 			$("#error").html("");

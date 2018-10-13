@@ -118,8 +118,15 @@
 							   href="#" id="account-dropdown" role="button">Account</a>
 
 							<div aria-labelledby="account-dropdown" class="dropdown-menu">
-								<h6 class="dropdown-header">You are not logged in.</h6>
-								<a class="dropdown-item" href="/account/login.html">Login</a>
+								<!-- acct-dd-status = ACCounT-DropDown-HeaDeR -->
+								<!-- lo-show = logged out show, li-show = logged in show.
+								lo-show is hidden when logged in, and vice versa --->
+								<h6 class="dropdown-header" id="acct-dd-status">
+									<span id="acct-dd-status-notloggedin" class="lo-show">You are not logged in.</span>
+									<span id="acct-dd-status-loggedin" class="li-show hidden">Logged in as <b id="acct-dd-status-loggedin-username" class="user-displayname">loading...</b>.</span></h6>
+								<a id="acct-dd-login-link" class="lo-show dropdown-item preserve-page" href="/account/login.html">Login</a>
+								<a id="acct-dd-logout-link" class="li-show dropdown-item preserve-page" href="/account/logout.html">Logout</a>
+								<a id="acct-dd-settings-link" class="li-show dropdown-item preserve-page" href="/account/settings.html">Account Settings</a>
 							</div>
 						</li>
 					</ul>
@@ -146,7 +153,7 @@
         <div class="col-lg-12" id="nokey">
             <h2 class="primary-heading">Create Account</h2>
 			<p class="text-muted">Please contact the webmaster(<a class="webmaster-email">Jeffrey Meng</a>) to get a create link to create your account.</p>
-
+			<p class="text-center"><a href="/account/login.html" class="preserve-state">Login instead</a></p>
 
         </div>
     </div>
@@ -163,7 +170,7 @@
                     Please enter a valid email.
                 </div>
                 <div class="invalid-feedback hidden" id="em-validation-inuse">
-                    The email provided is already used in an account. <a href="/account/login" class="text-danger">Login</a> instead?
+                    The email provided is already used in an account. <a href="/account/login.html" class="preserve-state">Login</a> instead?
                 </div>
             </div>
             <div class="form-group">
@@ -185,7 +192,7 @@
             </div>
             <button class="btn btn-primary btn-block" id="next-btn">Next</button>
             <p class="text-danger" id="error"></p>
-			<p id="account-tray" class="text-center"><a href="/account/login.html" id="login-link">Login</a> | <a href="/account/resetpassword.html" id="forgot-password-link">Forgot password</a></p>
+			<p id="account-tray" class="text-center"><a href="/account/login.html" id="login-link" class="preserve-state">Login</a> | <a href="/account/resetpassword.html" id="forgot-password-link" class="preserve-state">Forgot password</a></p>
         </div>
         <div class="col-lg-12 hidden" id="check-email">
             <h2 class="primary-heading">Check your email!</h2>
@@ -193,7 +200,7 @@
             <p><a href="#" class="text-center resend" id="resend">Resend the verification email</a>
                 <span id="resend-countdown" class="resend hidden">You can resend the verification email in <b class="resend-time-remaining">Synchronizing...</b> second<span class="resend-plural">s</span>.</span>
                 <span id="resend-success" class="resend hidden">Email successfully resent. You can resend the verification email again in <b class="resend-time-remaining">60</b> second<span class="resend-plural">s</span>.</span>
-                <span id="error-resending" class="resend hidden">Error resending. <a href="/account/create.html">Please reload</a> to try again.</span>
+                <span id="error-resending" class="resend hidden">Error resending. <a href="/account/create.html" class="preserve-state">Please reload</a> to try again.</span>
                 <span id="resend-loading" class="resend hidden">Resending email...</span>
             </p>
         </div>
@@ -276,10 +283,7 @@
 	
 <script id="scripts">
 
-	if (getQuery("continue") != "" && getQuery("continue") != null) {
-		$("#login-link").attr("href", "/account/create.html?continue=" + getQuery("continue"));
-		$("#forgot-password-link").attr("href", "/account/resetpassword.html?continue=" + getQuery("continue"));
-	}
+
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
 
@@ -305,7 +309,7 @@
                         } else {
 
                             $(".sent-date").text(getHumanDate(dateobj));
-                            $(".orig-email").text(user.providerData[0].email);
+                            $(".orig-email").text(user.email);
 							startResendTimer(true);
 
 						}
@@ -320,7 +324,7 @@
 					}
                     console.log(data);
                     $(".sent-date").text(getHumanDate(data));
-                    $(".orig-email").text(user.providerData[0].email);
+                    $(".orig-email").text(user.email);
                 }
                 $("#loading").addClass("hidden");
                 $("#main-box").removeClass("hidden");
@@ -341,7 +345,7 @@
 						startResendTimer();
 
 						$(".sent-date").text(getHumanDate(dateobj));
-						$(".orig-email").text(user.providerData[0].email);
+						$(".orig-email").text(user.email);
 					}
                 });
 

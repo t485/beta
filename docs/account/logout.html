@@ -118,8 +118,15 @@
 							   href="#" id="account-dropdown" role="button">Account</a>
 
 							<div aria-labelledby="account-dropdown" class="dropdown-menu">
-								<h6 class="dropdown-header">You are not logged in.</h6>
-								<a class="dropdown-item" href="/account/login.html">Login</a>
+								<!-- acct-dd-status = ACCounT-DropDown-HeaDeR -->
+								<!-- lo-show = logged out show, li-show = logged in show.
+								lo-show is hidden when logged in, and vice versa --->
+								<h6 class="dropdown-header" id="acct-dd-status">
+									<span id="acct-dd-status-notloggedin" class="lo-show">You are not logged in.</span>
+									<span id="acct-dd-status-loggedin" class="li-show hidden">Logged in as <b id="acct-dd-status-loggedin-username" class="user-displayname">loading...</b>.</span></h6>
+								<a id="acct-dd-login-link" class="lo-show dropdown-item preserve-page" href="/account/login.html">Login</a>
+								<a id="acct-dd-logout-link" class="li-show dropdown-item preserve-page" href="/account/logout.html">Logout</a>
+								<a id="acct-dd-settings-link" class="li-show dropdown-item preserve-page" href="/account/settings.html">Account Settings</a>
 							</div>
 						</li>
 					</ul>
@@ -142,6 +149,8 @@
                 <p>
                     You have been successfully logged out.
                 </p>
+                <p class="text-center"> <a href="/account/login.html" class="preserve-state">Login again</a> </p>
+
             </div>
 
         </div>

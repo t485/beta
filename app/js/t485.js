@@ -12,8 +12,8 @@ $('.dropdown a').click(function() {
 });
 
 //https://stackoverflow.com/a/901144/5511561
-function getQuery(name) {
-    let url = window.location.href;
+function getQuery(name, url) {
+	url = url || window.location.href;
     name = name.replace(/[\[\]]/g, '\\$&');
     let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
         results = regex.exec(url);
@@ -22,16 +22,21 @@ function getQuery(name) {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
+function getQueryString(url) {
+	url = url || window.location.href;
+	if (url.indexOf("?") < 0) return "";
+	return url.substring(url.indexOf("?"), (url.indexOf("#") > -1 ? url.indexOf("#") : undefined))
+}
+
 //https://stackoverflow.com/a/10997390/5511561
-function setQuery(name, value) {
+function setQuery(name, value, search) {
     if (value !== null && value !== undefined ) value = "" + value;//we want falsey values to be used literally, as a string (e.g. 0 -> "0", false -> "false).
-    let search = window.location.search;
+	search = search || window.location.search;
     let regex = new RegExp("([?;&])" + name + "[^&;]*[;&]?");
     let query = search.replace(regex, "$1").replace(/&$/, '');
 
     return (query.length > 2 ? query + "&" : "?") + (value ? name + "=" + value : '');
 }
-
 //http://stackoverflow.com/a/17606289/5511561s
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
@@ -73,4 +78,64 @@ $(function () {
             $('.navbar').removeClass('sticky-top');
         }
     });
+});
+
+//preserve continue state
+//this must not throw an exception if it fails because preserving the state is not strictly necessary for website use.
+function preserveLinkStates() {
+	if (getQuery("continue") !== "" && getQuery("continue") != null) {
+
+		$(".attach-continue-url, .preserve-state, .keep-state").each(function() {
+			var href = $(this).attr("href");
+			var base = href.substring(0,(href.indexOf("?") > -1 ? href.indexOf("?") : undefined));
+			var query = setQuery("continue", getQuery("continue"), getQueryString(href));
+			var hash = (href.indexOf("#") > -1 ? href.substring(href.indexOf("#")) : "");
+
+			$(this).attr("href", base + query + hash);
+		});
+	}
+}
+function preserveCurrentPage() {
+
+	$(".preserve-page, .keep-page").each(function() {
+		var href = $(this).attr("href");
+		var base = href.substring(0,(href.indexOf("?") > -1 ? href.indexOf("?") : undefined));
+		var query = setQuery("continue", encodeURIComponent(window.location.href), getQueryString(href));
+		var hash = (href.indexOf("#") > -1 ? href.substring(href.indexOf("#")) : "");
+		$(this).attr("href", base + query + hash);
+	});
+
+}
+if (window.dontPreserveContinueState !== true) {
+	preserveCurrentPage();
+}
+if (window.dontPreserveCurrentPage !== true) {
+	preserveLinkStates();
+}
+//https://stackoverflow.com/a/19279428/5511561
+function setURLQuery(fullQueryString) {
+
+	var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + fullQueryString + window.location.hash;
+	if (history.pushState) {
+		window.history.pushState({path:newurl},'',newurl);
+	} else {
+		//window.location.href = newurl;
+	}
+	checkDefaultOptions();
+}
+
+//login status changes
+firebase.auth().onAuthStateChanged( function (user) {
+	if (user) {
+		var email = user.email;
+		var displayname = user.displayname || email;
+		$(".user-email").text(email);
+		$(".user-displayname").text(displayname);
+
+		$(".lo-show").addClass("hidden");
+		$(".li-show").removeClass("hidden");
+	} else {
+		$(".li-show").addClass("hidden");
+		$(".lo-show").removeClass("hidden");
+	}
 });

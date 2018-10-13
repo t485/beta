@@ -482,16 +482,7 @@
         });
     })
     $("#filter-select").change(filterselectchange);
-    function setURLQuery(fullQueryString) {
-        
-        var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + fullQueryString + window.location.hash;
-        if (history.pushState) {
-            window.history.pushState({path:newurl},'',newurl);
-        } else {
-            //window.location.href = newurl;
-        }
-        checkDefaultOptions();
-    }
+
     function processURLOptions() {
         var preset = {//defaults
             sortby:1,
