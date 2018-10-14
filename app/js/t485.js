@@ -37,6 +37,13 @@ function setQuery(name, value, search) {
 
     return (query.length > 2 ? query + "&" : "?") + (value ? name + "=" + value : '');
 }
+
+function setQueryUrl(name, value, url) {
+	var base = url.substring(0,(url.indexOf("?") > -1 ? url.indexOf("?") : undefined));
+	var query = setQuery(name, value, getQueryString(url));
+	var hash = (url.indexOf("#") > -1 ? url.substring(url.indexOf("#")) : "");
+	return base + query + hash;
+}
 //http://stackoverflow.com/a/17606289/5511561s
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
@@ -88,7 +95,7 @@ function preserveLinkStates() {
 		$(".attach-continue-url, .preserve-state, .keep-state").each(function() {
 			var href = $(this).attr("href");
 			var base = href.substring(0,(href.indexOf("?") > -1 ? href.indexOf("?") : undefined));
-			var query = setQuery("continue", getQuery("continue"), getQueryString(href));
+			var query = setQuery("continue", getQuery("continue"), encodeURIComponent(getQueryString(href)));
 			var hash = (href.indexOf("#") > -1 ? href.substring(href.indexOf("#")) : "");
 
 			$(this).attr("href", base + query + hash);
@@ -123,6 +130,8 @@ function setURLQuery(fullQueryString) {
 	}
 	checkDefaultOptions();
 }
+
+
 
 //login status changes
 firebase.auth().onAuthStateChanged( function (user) {

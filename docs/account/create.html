@@ -196,13 +196,16 @@
         </div>
         <div class="col-lg-12 hidden" id="check-email">
             <h2 class="primary-heading">Check your email!</h2>
-            <p>We sent a verification email to <b class="orig-email">loading...</b> on <b class="sent-date">loading...</b>. Follow the link on that email to finish setting up your account.</p>
+            <p>We sent a verification email to <b class="orig-email">loading...</b> <b class="sent-date">loading...</b>. Follow the link on that email to finish setting up your account.</p>
             <p><a href="#" class="text-center resend" id="resend">Resend the verification email</a>
                 <span id="resend-countdown" class="resend hidden">You can resend the verification email in <b class="resend-time-remaining">Synchronizing...</b> second<span class="resend-plural">s</span>.</span>
                 <span id="resend-success" class="resend hidden">Email successfully resent. You can resend the verification email again in <b class="resend-time-remaining">60</b> second<span class="resend-plural">s</span>.</span>
                 <span id="error-resending" class="resend hidden">Error resending. <a href="/account/create.html" class="preserve-state">Please reload</a> to try again.</span>
                 <span id="resend-loading" class="resend hidden">Resending email...</span>
             </p>
+			<p>
+				<a class="restart">Use a different email.</a>
+			</p>
         </div>
         <div class="col-lg-12 hidden" id="unknown-error">
             <h2 class="primary-heading">An Error Occurred</h2>
@@ -283,7 +286,23 @@
 	
 <script id="scripts">
 
+	$(".restart").click(function() {
+		firebase.auth().signOut().then(function() {
+			window.location.href = window.location.href;
+		}).catch(function(error) {
+			$("#loading").addClass("hidden");
+			$("#main-box").addClass("hidden");
+			$("#basic-data").addClass("hidden");
+			$("#check-email").addClass("hidden");
 
+			
+			$("#unknown-error-text").text(error.code);
+			$("#unknown-error").removeClass("hidden");
+
+			// An error happened.
+			console.log(error);
+		});
+	})
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
 
@@ -293,7 +312,10 @@
             firebase.database().ref("/users/" + user.uid + "/latestverificationemail/").once("value").then(function(snapshot) {
                 var data = snapshot.val();
                 console.log(data);
-                if (data == null) {
+
+                if (data == null || new Date() - new Date(data.date) > 10 * 60 * 1000) {
+                	//if the data is nonexistent OR the the date stored in data was more than 10 minutes ago
+                    //send a new link. Links expire in 10 minutes.
                     sendverificationemail(user, function(dateobj) {
 
                         if (dateobj === false || dateobj == null) {
@@ -315,7 +337,7 @@
 						}
 
                     });
-                } else {
+                }  else {
 
                     if (new Date() - new Date(data.date) < 60 * 1000) {//60 seconds ago
 						console.log(new Date() - new Date(data.date));
@@ -351,7 +373,10 @@
 
             })
         } else {
-            if (getQuery("key") != "test") {
+			 if ((getQuery("verifEmailOnly") == "true" || getQuery("verifEmailOnly"))) {
+				window.location.href = setQueryUrl("continue", encodeURIComponent(window.location.href), window.location.href);
+				//login, then redirect back here with same verifEmailOnly query
+			} else if (getQuery("key") != "test") {
                 $("#main-box").remove();
                 $("#scripts").remove();
                 $("#loading").addClass("hidden");
@@ -395,14 +420,15 @@
 		}, 1000);
     }
     function getHumanDate(dateobj) {
+    	var today = new Date();
         var date = dateobj.date;
         if (typeof date === "string") {
             date = new Date(date);
         }
         console.log(dateobj);
-        var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];//for clarity
+        var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];//for clarity, use seperatly declared arrays.
         var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-        var day = days[date.getDay()];
+        var day = days[date.getDay() - 1];
         var dayOfMonth = date.getDate();
         var month = months[date.getMonth()];
         var year = date.getFullYear();
@@ -418,8 +444,12 @@
 			timediffminutes = "00" + timediffminutes;
 		}
 		var iata = dateobj.timezone.iata;
-		return day + ", " + month + " " + dayOfMonth + ", " + year + " at " + time + " UTC-" + timediffhour + timediffminutes + "(" + iata + ")";
+		if (today.getDay() != date.getDay()) {
+			return "on " + day + ", " + month + " " + dayOfMonth + ", " + year + " at " + time + " UTC-" + timediffhour + timediffminutes + "(" + iata + ")";
+		} else {
+			return "at " + time /*+ " UTC-" + timediffhour + timediffminutes + "(" + iata + ")"*/;
 
+		}
 
     }
     function sendverificationemail(user, callback) {
@@ -435,8 +465,9 @@
 
                 var date = new Date();
                 var dateobj = {
-                    date:(date + ""),// + "" is IMPORTANT!! otherwise date is pushed to
+                    date:date + "",// + "" is IMPORTANT!! otherwise date is pushed to
 					// Firebase as undefined even though console.log prints it as a string.
+					//we can't do date.get time because time zones are not preserved.
                     timezone: {
                         iata: Intl.DateTimeFormat().resolvedOptions().timeZone,//IANA time zone (e.g. America/Los_Angeles)
                         offset: date.getTimezoneOffset()//in minutes

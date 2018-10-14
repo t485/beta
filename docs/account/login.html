@@ -139,7 +139,7 @@
 		<div class="container" id="mainContainer">
 			
 
-<div class="row col-lg-12">
+<div class="row col-lg-12" id="main-box">
     <div class="box w-100">
         <div class="col-lg-12">
             <h2 class="primary-heading">Login</h2>
@@ -161,7 +161,18 @@
         </div>
     </div>
 </div>
+<div class="row col-lg-12 hidden" id="verify-box">
+	<div class="box w-100">
+		<div class="col-lg-12">
+			<h2 class="primary-heading">Verify your email</h2>
 
+
+			<div>
+				<p>Please <a href="/account/create.html?verifEmailOnly=true">verify your email</a> to finish setting up your account and use the website.</p>
+			</div>
+		</div>
+	</div>
+</div>
 
 		</div>
 	
@@ -234,11 +245,17 @@
 
 	firebase.auth().onAuthStateChanged(function(user) {
 		if (user) {
-			$("#error").html("");
-			if (getQuery("continue") == "" || getQuery("continue") == null) {
-				window.location.href = "/account/";
-			} else {
-				window.location.href = getQuery("continue");
+			if (!user.emailVerified) {
+				$("#main-box").addClass("hidden");
+				$("#verify-box").removeClass("hidden");
+            } else {
+				$("#error").html("");
+
+				if (getQuery("continue") == "" || getQuery("continue") == null) {
+					window.location.href = "/account/";
+				} else {
+					window.location.href = getQuery("continue");
+				}
 			}
 		}
 	});
