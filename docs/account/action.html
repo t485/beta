@@ -467,7 +467,7 @@
 		}).then(function() {
 			// Account email reverted to restoredEmail
 
-			// TODO: Display a confirmation message to the user.
+			// Display a confirmation message to the user.
 			$("#success-title").text("The email change has been reverted back to " + restoredEmail);
 			// You might also want to give the user the option to reset their password
 			// in case the account was compromised:
@@ -491,10 +491,10 @@
 					errortext = "The user to which this action code was issued from was disabled or deleted";
 					break;
 				case "auth/expired-action-code":
-					errortext = "The link given has been expired. <a href='/account/resetpassword.html'>Reset your password again</a> to get a new link."
+					errortext = "The link given has been expired. Please contact the webmaster."
 					break;
 				case "auth/invalid-action-code":
-					errortext = "The link given has already been used. <a href='/account/resetpassword.html'>Reset your password again</a> to get a new link."
+					errortext = "The link given has already been used. <a href='/account/login.html'>Login</a> or contact the webmaster."
 					break;
 				default:
 					errortext = "An unknown error occurred. (Code: " + error.code + ")";
@@ -507,7 +507,41 @@
 			}
 		});
 	}
+	function handleVerifyEmail(auth, actionCode, continueUrl) {
+		// Localize the UI to the selected language as determined by the lang
+		// parameter.
+		// Try to apply the email verification code.
+		auth.applyActionCode(actionCode).then(function(resp) {
+			// Email address has been verified.
 
+			if (continueUrl != null && continueUrl != "") {
+				window.location.href = "setup.html?continue=" + continueUrl;
+			} else {
+				window.location.href = "setup.html";
+			}
+		}).catch(function(error) {
+			// Code is invalid or expired. Ask the user to verify their email address
+			// again.
+			// Invalid code.
+			var errortext = "";
+			console.log(error);
+			switch (error.code) {
+
+				case "auth/user-not-found":
+				case "auth/user-disabled":
+					errortext = "The user to which this action code was issued from was disabled or deleted";
+					break;
+				case "auth/expired-action-code":
+					errortext = "The link given has been expired. <a href='/account/create.html?verifEmailOnly=true'>Verify your email again</a> to get a new link."
+					break;
+				case "auth/invalid-action-code":
+					errortext = "The link given has already been used. <a href='/account/create.html?verifEmailOnly=true'>Verify your email again</a> to get a new link."
+					break;
+				default:
+					errortext = "An unknown error occurred. (Code: " + error.code + ")";
+			}
+		});
+	}
 </script>
 
 	 
