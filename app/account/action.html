@@ -256,7 +256,7 @@
 
 		var restoredEmail = null;
 		// Confirm the action code is valid.
-		auth.checkActionCode(actionCode).then(function(info) {
+		firebase.auth().checkActionCode(actionCode).then(function(info) {
 			// Get the restored email address.
 			restoredEmail = info.data.email;
 
