@@ -309,7 +309,7 @@
 		// Localize the UI to the selected language as determined by the lang
 		// parameter.
 		// Try to apply the email verification code.
-		auth.applyActionCode(actionCode).then(function(resp) {
+		firebase.auth().applyActionCode(actionCode).then(function(resp) {
 			// Email address has been verified.
 
 			if (continueUrl != null && continueUrl != "") {
