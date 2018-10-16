@@ -374,7 +374,7 @@
             })
         } else {
 			 if ((getQuery("verifEmailOnly") == "true" || getQuery("verifEmailOnly"))) {
-				window.location.href = setQueryUrl("continue", encodeURIComponent(window.location.href), window.location.href);
+				window.location.href = setQueryUrl("continue", encodeURIComponent(window.location.href), "/account/login.html");
 				//login, then redirect back here with same verifEmailOnly query
 			} else if (getQuery("key") != "test") {
                 $("#main-box").remove();

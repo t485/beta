@@ -269,7 +269,7 @@
 			$("#success-title").text("The email change has been reverted back to " + restoredEmail);
 			// You might also want to give the user the option to reset their password
 			// in case the account was compromised:
-			$("#success-body").html("If you did not request the original email change then your account may have been compromised. Click <a href="/account/resetpassword.html" id="pw-reset-link">here</a> to reset your password.");
+			$("#success-body").html("If you did not request the original email change then your account may have been compromised. Click <a href='/account/resetpassword.html' id='pw-reset-link'>here</a> to reset your password.");
 			$("#pw-reset-link").attr("href", "/account/resetpassword.html?email=" + restoredEmail);
 			$("#loading").addClass("hidden");
 			$("#success-box").removeClass("hidden");

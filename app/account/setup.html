@@ -3,40 +3,38 @@
 
 {% block main %}
 
-<div class="row col-lg-12" id="main-box">
+<div class="row col-lg-12 hidden " id="confirm-box">
 	<div class="box w-100">
 		<div class="col-lg-12">
-			<h2 class="primary-heading">Account Setup</h2>
+			<h2 class="primary-heading">Confirm Synchronization</h2>
 
+			<p>This action may take a few minutes and you will not be able to leave the page until it is done.</p>
+			<button class="btn btn-danger btn-block">Update Account Data</button>
 
-			<div>
-				<div class="form-group">
-					<label for="email">Email address:</label>
-					<input type="email" class="form-control" id="email" placeholder="Enter your email...">
-				</div>
-				<div class="form-group">
-					<label for="password">Password:</label>
-					<input type="password" class="form-control" id="password" placeholder="Enter your password...">
-				</div>
-				<button class="btn btn-primary btn-block" id="login">Login</button>
-				<p class="text-danger" id="error"></p>
-				<p id="account-tray" class="text-center"><a href="/account/create.html" id="create-link" class="preserve-state">Create an account</a> | <a href="/account/resetpassword.html" id="forgot-password-link" class="preserve-state">Forgot password</a></p>
-			</div>
 		</div>
 	</div>
 </div>
-<div class="row col-lg-12 hidden" id="verify-box">
+<div class="row col-lg-12 hidden " id="verify-box">
 	<div class="box w-100">
 		<div class="col-lg-12">
-			<h2 class="primary-heading">Verify your email</h2>
+			<h2 class="primary-heading">Verify Your Email First!</h2>
 
+			<p>Before you may synchronize your account you must verify your email.</p>
 
-			<div>
-				<p>Please <a href="/account/create.html?verifEmailOnly=true">verify your email</a> to finish setting up your account and use the website.</p>
-			</div>
 		</div>
 	</div>
 </div>
+<div class="row col-lg-12" id="loading-box">
+	<div class="box w-100">
+		<div class="col-lg-12">
+			<h2 class="primary-heading">Gathering account information</h2>
+
+			<p>Please wait while we load your account information...</p>
+
+		</div>
+	</div>
+</div>
+
 {% endblock %}
 
 {% block scripts %}
@@ -45,28 +43,70 @@
 	firebase.auth().onAuthStateChanged(function(user) {
 		if (user) {
 			if (!user.emailVerified) {
-				$("#main-box").addClass("hidden");
+				$("#loading-box").addClass("hidden");
 				$("#verify-box").removeClass("hidden");
+				console.log("hi");
 			} else {
 				$("#error").html("");
+				firebase.database().ref("/directory/keys/").once("value").then(function(snapshot){
+					var keys = snapshot.val();
+					$(".link-google-sheet-dir").attr("href", `https://docs.google.com/spreadsheets/d/${keys.id}/edit`);
 
-				if (getQuery("continue") == "" || getQuery("continue") == null) {
-					window.location.href = "/account/";
-				} else {
-					window.location.href = getQuery("continue");
-				}
+					rangeString = ``;
+					for (i = 0; i < keys.sheets.length; i ++) {
+						rangeString += `ranges=${keys.sheets[i]}!A2:U&`
+					}
+
+					var UserType = Object.freeze({"STUDENT":1, "FATHER":2, "MOTHER":3});
+					console.log(1)
+					$.ajax({
+						url:`https://sheets.googleapis.com/v4/spreadsheets/${keys.id}/values:batchGet/?${rangeString}majorDimension=ROWS&valueRenderOption=FORMATTED_VALUE&key=${keys.api}`,
+						method:"GET",
+						dataType:"json"
+					}).done(function(data){
+						$("#loading-text").addClass("hidden");
+						var ranges = data.valueRanges;
+						var scoutArrayKeymap = [["scout", "firstName"], ["scout", "lastName"], ["scout", "email"], ["scout", "homePhone"], ["scout", "slack"], ["scout", "job"], ["scout", "joinDate"], ["scout", "active"], ["scout", "WFATrained"], ["scout", "school"], ["scout", "cellPhone"],
+							["father", "firstName"], ["father", "lastName"], ["father", "cellPhone"], ["father", "email"], ["father", "slack"],
+							["mother", "firstName"], ["mother", "lastName"], ["mother", "cellPhone"], ["mother", "email"], ["mother", "slack"]];
+						var scouts = [];
+						var row = 0;
+						//loop through patrols
+						for (i = 0; i < ranges.length; i ++) {
+							var values = ranges[i].values;
+							var patrol = keys.sheets[i];
+
+							//loop within patrols
+							for (j = 0; j < values.length; j ++) {
+								console.log(values[j]);
+
+								if (values[j][2] == user.email) {
+									handleUserData(values[j], user, 1);
+								} else if (values[j][14] == user.email) {
+
+									handleUserData(values[j], user, 2);
+								} else if (values[j][19] == user.email) {
+
+									handleUserData(values[j], user, 3);
+								}
+							}
+
+						}
+						console.log("done");
+
+					});
+
+				});
+
 			}
+		} else {
+			window.location.href = "/login.html";
 		}
 	});
-	$("#login").click(function() {
-		var email = $("#email").val();
-		var password = $("#password").val();
-		$("#error").html("");
-		firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-			$("#error").html("Error: Email/Password incorrect.");
+	function handleUserData(data, user, type) {
+		console.log(data);
+		console.log(type);
+	}
 
-		})
-
-	});
 </script>
 {% endblock %}
