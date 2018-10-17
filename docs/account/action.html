@@ -325,13 +325,13 @@
 		$("#badurl-box").removeClass("hidden");
 	} else {
 		// Get the action to complete.
-		var mode = getQuery('mode');
+		var mode = getQuery("mode");
 
 		// Get the one-time code from the query parameter.
-		var actionCode = getQuery('oobCode');
+		var actionCode = getQuery("oobCode");
 
 		//  Get the continue URL from the query parameter if available.
-		var continueUrl = getQuery('continueUrl');
+		var continueUrl = getQuery("continueUrl");
 
 		//  Get the language code if available.
 		var lang = getQuery('lang') || 'en';
@@ -347,6 +347,7 @@
 				handleRecoverEmail(actionCode, lang);
 				break;
 			case 'verifyEmail':
+				console.log(actionCode);
 				// Display email verification handler and UI.
 				handleVerifyEmail(actionCode, continueUrl, lang);
 				break;
@@ -454,7 +455,7 @@
 			}
 		});
 	}
-	function handleRecoverEmail(auth, actionCode) {
+	function handleRecoverEmail(actionCode) {
 
 		var restoredEmail = null;
 		// Confirm the action code is valid.
@@ -507,17 +508,19 @@
 			}
 		});
 	}
-	function handleVerifyEmail(auth, actionCode, continueUrl) {
+	function handleVerifyEmail(actionCode, continueUrl) {
 		// Localize the UI to the selected language as determined by the lang
 		// parameter.
 		// Try to apply the email verification code.
+		console.log(actionCode);
+		console.log(getQuery("oobCode"))
 		firebase.auth().applyActionCode(actionCode).then(function(resp) {
 			// Email address has been verified.
 
 			if (continueUrl != null && continueUrl != "") {
-				window.location.href = "setup.html?continue=" + continueUrl;
+				window.location.href = "/account/setup.html?continue=" + continueUrl;
 			} else {
-				window.location.href = "setup.html";
+				window.location.href = "/account/setup.html";
 			}
 		}).catch(function(error) {
 			// Code is invalid or expired. Ask the user to verify their email address
